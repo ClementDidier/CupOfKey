@@ -2,6 +2,6 @@ package devops.cupofkey.client;
 
 public enum RequestResult 
 {
-	STORED,
-	OUT_OF_MEMORY
+	STORED_SUCCESSFULY,
+	ERROR_OUT_OF_MEMORY
 }

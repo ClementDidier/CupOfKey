@@ -54,20 +54,50 @@ public class ClientTest
 		/*Client client = new Client("wrongAddr", 6666);
 		client.connect();
 		RequestResult result = client.store("MaClef", "MaChaineDeCaractères");
-		assertEquals(result, RequestResult.STORED);
+		assertEquals(result, RequestResult.STORED_SUCCESSFULY);
 		*/
 	}
 	
 	@Test
 	public void ClientStoreInt_test()
 	{
-		
+		/*Client client = new Client("wrongAddr", 6666);
+		client.connect();
+		RequestResult result = client.store("MaClef", 123456);
+		assertEquals(result, RequestResult.STORED_SUCCESSFULY);
+		*/
+	}
+	
+	@Test
+	public void ClientStoreSerialClassObject_test()
+	{
+		/*
+		// CustomObject extends SerialClass
+		CustomObject obj = new CustomObject(...);
+		 
+		Client client = new Client("wrongAddr", 6666);
+		client.connect();
+		RequestResult result = client.store("MaClef", obj);
+		assertEquals(result, RequestResult.STORED_SUCCESSFULY);
+		*/
 	}
 	
 	@Test
 	public void ClientRemoveStoredObject_test()
 	{
+		/*
+		String ipAddr = "127.0.0.1";
+		int port = 6666;
 		
+		Client client = new Client(ipAddr, port);
+		client.connect();
+		assertEquals(client.store("MaClef", "MaChaineDeCaractères"), RequestResult.STORED_SUCCESSFULY);
+		client.disconnect();
+		
+		client = new Client(ipAddr, port);
+		client.connect();
+		assertTrue(client.remove("MaClef"));
+		*/
 	}
 	
 	@Test

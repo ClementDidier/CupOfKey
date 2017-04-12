@@ -2,8 +2,9 @@ package devops.cupofkey.client;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
+
+import devops.cupofkey.core.SerialClass;
 
 public class Client 
 {
@@ -45,7 +46,20 @@ public class Client
 	public RequestResult store(String key, String str)
 	{
 		// good
-		return RequestResult.STORED;
+		return RequestResult.STORED_SUCCESSFULY;
+	}
+	
+	public RequestResult store(String key, int val)
+	{
+		// good
+		return RequestResult.STORED_SUCCESSFULY;
+	}
+	
+	public RequestResult store(String key, SerialClass object)
+	{
+		//object.serialize();
+		// good
+		return RequestResult.STORED_SUCCESSFULY;
 	}
 }
 
