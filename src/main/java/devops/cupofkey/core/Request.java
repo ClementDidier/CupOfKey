@@ -16,90 +16,13 @@ public class Request extends SerialClass{
 	private static final long serialVersionUID = 4146445245811612066L;
 	
 	/**
-	 * Type de la requete client.
-	 */
-	public enum commandType{
-		
-		/**
-		 * Retourne l'element (indice en parametre) de la liste (key en parametre).
-		 */
-		GET,
-		
-		/**
-		 * Ajoute l'element dans la liste key.
-		 */
-		PUSH,
-		
-		/**
-		 * Retourne la liste complete de l'indice key
-		 */
-		GET_LIST,
-		
-		/**
-		 * Re definit l'element a la cle key avec data
-		 */
-		SET,
-		
-		/**
-		 * Supprime l'element i de la liste de cle key
-		 */
-		DELETE,
-		
-		/**
-		 * supprime la liste a la cle key
-		 */
-		CLEAR,
-		
-		/**
-		 * retourne 1 si emplacement vide a la cle key, 0 sinon
-		 */
-		EMPTY,
-		
-		/**
-		 * Ajoute (int)data a tout les element de liste.
-		 */
-		INCREMENT,
-		
-		/**
-		 * Multiplie les element de la liste par (int)data.
-		 */
-		MULT
-	}
-	
-	/**
-	 * type des donnees echangee
-	 */
-	private enum dataType{
-		/**
-		 * type entier
-		 */
-		INTEGER,
-		/**
-		 * Type chaine
-		 */
-		STRING,
-		/**
-		 * type liste d'entier
-		 */
-		INT_LIST,
-		/**
-		 * type de liste de chaine
-		 */
-		STRING_LIST,
-		/**
-		 * type inconnu
-		 */
-		OBJECT
-	}
-	
-	/**
 	 * Type de la requete
 	 */
-	private final commandType	cmdtype;
+	private final CommandType	cmdtype;
 	/**
 	 * Type des donnees de la requete
 	 */
-	private final dataType		dType;
+	private final DataType		dataType;
 	/**
 	 * indice (optionnel) dans la liste a traiter
 	 */
@@ -120,9 +43,9 @@ public class Request extends SerialClass{
 	 * @param key
 	 * @param data
 	 */
-	public Request(commandType cmdtype, dataType dType, String key, int indice, String data){
+	public Request(CommandType cmdtype, DataType dType, String key, int indice, String data){
 		this.cmdtype	= cmdtype;
-		this.dType		= dType;
+		this.dataType		= dType;
 		this.indice		= indice;
 		this.key		= key;
 		this.data		= data;
@@ -134,9 +57,9 @@ public class Request extends SerialClass{
 	 * @param key
 	 * @param data
 	 */
-	public Request(commandType cmdtype, dataType dType, String key, String data){
+	public Request(CommandType cmdtype, DataType dType, String key, String data){
 		this.cmdtype	= cmdtype;
-		this.dType		= dType;
+		this.dataType		= dType;
 		this.indice		= 0;
 		this.key		= key;
 		this.data		= data;
@@ -148,9 +71,9 @@ public class Request extends SerialClass{
 	 * @param key
 	 * @param indice
 	 */
-	public Request(commandType cmdtype, dataType dType, String key, int indice){
+	public Request(CommandType cmdtype, DataType dType, String key, int indice){
 		this.cmdtype	= cmdtype;
-		this.dType		= dType;
+		this.dataType		= dType;
 		this.indice		= indice;
 		this.key		= key;
 		this.data		= null;
@@ -161,9 +84,9 @@ public class Request extends SerialClass{
 	 * @param dType
 	 * @param key
 	 */
-	public Request(commandType cmdtype, dataType dType, String key) {
+	public Request(CommandType cmdtype, DataType dType, String key) {
 		this.cmdtype	= cmdtype;
-		this.dType		= dType;
+		this.dataType		= dType;
 		this.indice		= 0;
 		this.key		= key;
 		this.data		= null;
@@ -172,15 +95,15 @@ public class Request extends SerialClass{
 	/**
 	 * @return le type de la requete
 	 */
-	public commandType getCmdtype() {
+	public CommandType getCommandType() {
 		return this.cmdtype;
 	}
 
 	/**
 	 * @return le type des donnees (data)
 	 */
-	public dataType getdType() {
-		return this.dType;
+	public DataType getDataType() {
+		return this.dataType;
 	}
 
 	/**

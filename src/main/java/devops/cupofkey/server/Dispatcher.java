@@ -12,7 +12,6 @@ public class Dispatcher extends Thread {
 	 */
 	private final static int PORT = 8888;
 
-	@SuppressWarnings("resource")
 	@Override
 	public void run(){
 		try {

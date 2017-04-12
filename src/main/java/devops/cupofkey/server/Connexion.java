@@ -40,13 +40,18 @@ public class Connexion extends Thread {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private void handle() {
 		try {
 			
 			BufferedReader input		= new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			PrintStream output			= new PrintStream(this.socket.getOutputStream());		
 			String requestString		= input.readLine();
+			
+			// TODO: Use requestPackages
 			Request requestPackages		= Request.deserialize(requestString);
+			
+			// TODO: Use responsePackage
 			Response responsePackage	= new Response(errorType.UNHANDLED_ERROR);
 			
 			output.println("j'ai recu quelque chose");
