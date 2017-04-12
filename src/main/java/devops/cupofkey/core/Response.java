@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.util.Base64;
 
 /**
- * Repr�sente une r�ponse du serveur � un client suite � une requ�te.
+ * Represente une r�ponse du serveur � un client suite � une requ�te.
  */
 public class Response extends SerialClass {
 
@@ -19,7 +19,7 @@ public class Response extends SerialClass {
 	 * Type des erreurs pouvant �tre retourn� par le serveur
 	 */
 	@SuppressWarnings("javadoc")
-	private enum errorType{
+	public enum errorType{
 		UNHANDLED_ERROR,
 	}
 	

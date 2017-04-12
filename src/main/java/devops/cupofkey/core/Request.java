@@ -18,7 +18,7 @@ public class Request extends SerialClass{
 	/**
 	 * Type de la requete client.
 	 */
-	private enum commandType{
+	public enum commandType{
 		
 		/**
 		 * Retourne l'element (indice en parametre) de la liste (key en parametre).
