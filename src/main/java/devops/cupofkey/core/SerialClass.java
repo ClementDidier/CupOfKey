@@ -24,7 +24,6 @@ public class SerialClass implements Serializable {
      * @throws IOException 
      * @throws ClassNotFoundException 
      */
-	@SuppressWarnings("resource")
 	public static Response deserialize(String s) throws IOException , ClassNotFoundException {
 		byte [] data			= Base64.getDecoder().decode(s);
 		ObjectInputStream ois	= new ObjectInputStream(new ByteArrayInputStream(data));
@@ -38,7 +37,6 @@ public class SerialClass implements Serializable {
      * @return une chaine de caract�re correspondant � cette instance de la classe Response
      * @throws IOException 
      */
-    @SuppressWarnings("resource")
 	public String serialize() throws IOException {
         ByteArrayOutputStream baos	= new ByteArrayOutputStream();
         ObjectOutputStream oos		= new ObjectOutputStream(baos);
