@@ -1,36 +1,19 @@
 package devops.cupofkey.core;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Base64;
 
 /**
- * Fournit des m�thodes de serialization
+ * Fournit des methodes de serialization
  */
-public class SerialClass implements Serializable {
+public abstract class SerialClass implements Serializable {
 	
     /**
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -1686690481650862280L;
-
-	/** 
-     * Read the object from Base64 string. 
-     * @param s la chaine de la classe serializee
-     * @return une nouvelle instance de la classe Response
-     * @throws IOException 
-     * @throws ClassNotFoundException 
-     */
-	public static Response deserialize(String s) throws IOException , ClassNotFoundException {
-		byte [] data			= Base64.getDecoder().decode(s);
-		ObjectInputStream ois	= new ObjectInputStream(new ByteArrayInputStream(data));
-		Response resp			= (Response)ois.readObject();
-		ois.close();
-		return resp;
-   }
 
     /** 
      * Write the object to a Base64 string. 

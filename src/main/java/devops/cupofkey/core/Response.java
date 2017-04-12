@@ -1,4 +1,10 @@
 package devops.cupofkey.core;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Base64;
+
 /**
  * Repr�sente une r�ponse du serveur � un client suite � une requ�te.
  */
@@ -56,4 +62,19 @@ public class Response extends SerialClass {
 	public errorType getError(){
 		return this.error;
 	}
+	
+	/** 
+     * Read the object from Base64 string. 
+     * @param s la chaine de la classe serializee
+     * @return une nouvelle instance de la classe Response
+     * @throws IOException 
+     * @throws ClassNotFoundException 
+     */
+	public static Response deserialize(String s) throws IOException , ClassNotFoundException {
+		byte [] data			= Base64.getDecoder().decode(s);
+		ObjectInputStream ois	= new ObjectInputStream(new ByteArrayInputStream(data));
+		Response resp			= (Response)ois.readObject();
+		ois.close();
+		return resp;
+   }
 }
