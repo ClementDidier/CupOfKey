@@ -1,10 +1,5 @@
 package devops.cupofkey.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Base64;
-
 /**
  * Represente une r�ponse du serveur � un client suite � une requ�te.
  */
@@ -16,17 +11,9 @@ public class Response extends SerialClass {
 	private static final long serialVersionUID = -1037588044429127369L;
 
 	/**
-	 * Type des erreurs pouvant �tre retourn� par le serveur
-	 */
-	@SuppressWarnings("javadoc")
-	public enum errorType{
-		UNHANDLED_ERROR,
-	}
-	
-	/**
 	 * type d'erreur, peut etre null
 	 */
-	private final errorType	error;
+	private final ErrorType	error;
 	
 	/**
 	 * donnees serializees de la reponse
@@ -36,7 +23,7 @@ public class Response extends SerialClass {
 	/**
 	 * @param error nom de l'erreur eventuelle
 	 */
-	public Response(errorType error){
+	public Response(ErrorType error){
 		this.error	= error;
 		this.data	= null;
 	}
@@ -59,22 +46,7 @@ public class Response extends SerialClass {
 	/**
 	 * @return l'erreur de la reponse
 	 */
-	public errorType getError(){
+	public ErrorType getError(){
 		return this.error;
 	}
-	
-	/** 
-     * Read the object from Base64 string. 
-     * @param s la chaine de la classe serializee
-     * @return une nouvelle instance de la classe Response
-     * @throws IOException 
-     * @throws ClassNotFoundException 
-     */
-	public static Response deserialize(String s) throws IOException , ClassNotFoundException {
-		byte [] data			= Base64.getDecoder().decode(s);
-		ObjectInputStream ois	= new ObjectInputStream(new ByteArrayInputStream(data));
-		Response resp			= (Response)ois.readObject();
-		ois.close();
-		return resp;
-   }
 }

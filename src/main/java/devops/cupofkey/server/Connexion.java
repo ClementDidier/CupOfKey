@@ -1,9 +1,9 @@
 package devops.cupofkey.server;
 import java.net.*;
 
+import devops.cupofkey.core.ErrorType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.Response;
-import devops.cupofkey.core.Response.errorType;
 
 import java.io.*;
 
@@ -37,9 +37,6 @@ public class Connexion extends Thread {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@SuppressWarnings("unused")
 	private void handle() {
 		try {
@@ -49,10 +46,10 @@ public class Connexion extends Thread {
 			String requestString		= input.readLine();
 			
 			// TODO: Use requestPackages
-			Request requestPackages		= Request.deserialize(requestString);
+			Request requestPackages		= Request.deserialize(requestString, Request.class);
 			
 			// TODO: Use responsePackage
-			Response responsePackage	= new Response(errorType.UNHANDLED_ERROR);
+			Response responsePackage	= new Response(ErrorType.UNHANDLED_ERROR);
 			
 			output.println("j'ai recu quelque chose");
 			

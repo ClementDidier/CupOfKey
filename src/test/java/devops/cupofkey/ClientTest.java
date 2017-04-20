@@ -1,8 +1,9 @@
 package devops.cupofkey;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,9 @@ import devops.cupofkey.client.Client;
 
 public class ClientTest 
 {
+	private final static String IP_ADDRESS = "127.0.0.1";
+	private final static int PORT = 4000;
+	
 	@Before
 	public void init()
 	{
@@ -25,32 +29,41 @@ public class ClientTest
 		client.disconnect();*/
 	}
 	
-	@Test(expected = UnknownHostException.class)
+	@Test(expected = IOException.class)
 	public void ClientFailConnect_test() throws Exception
 	{
-		Client client = new Client("wrongAddr", 6666);
+		Client client = new Client("WrongAddress", PORT);
 		client.connect();
 		
+		// Cas de non exception
+		fail("Exception attendue non jetée");
 	}
 	
 	@Test
-	public void ClientFailIsConnect_test() throws Exception
+	public void ClientFailIsConnect_test()
 	{
-		Client client = new Client("127.0.0.1", 6666);
-		client.connect();
-		assertFalse(client.isConnected());
+		Client client = new Client(IP_ADDRESS, -1);
+		
+		assertFalse("Connection non effective", client.isConnected());
 	}
 	
 	@Test
 	public void ClientConnect_test()
 	{
-		//Client client = new Client("127.0.0.1", 4000);
-		
+		// TODO : Implémenter (@Before serveur)
+		/*Client client = new Client(IP_ADDRESS, PORT);
+		try {
+			client.connect();
+		} catch (IOException e) {
+			fail("Connection au serveur échouée");
+		}
+		assertTrue("Connection effective", client.isConnected());*/
 	}
 	
 	@Test
 	public void ClientStoreString_test()
 	{
+		// TODO : Implémenter (@Before serveur)
 		/*Client client = new Client("wrongAddr", 6666);
 		client.connect();
 		RequestResult result = client.store("MaClef", "MaChaineDeCaractères");
@@ -61,6 +74,7 @@ public class ClientTest
 	@Test
 	public void ClientStoreInt_test()
 	{
+		// TODO : Implémenter (@Before serveur)
 		/*Client client = new Client("wrongAddr", 6666);
 		client.connect();
 		RequestResult result = client.store("MaClef", 123456);
@@ -71,6 +85,7 @@ public class ClientTest
 	@Test
 	public void ClientStoreSerialClassObject_test()
 	{
+		// TODO : Implémenter (@Before serveur)
 		/*
 		// CustomObject extends SerialClass
 		CustomObject obj = new CustomObject(...);
@@ -83,26 +98,48 @@ public class ClientTest
 	}
 	
 	@Test
+	public void ClientRemoveNotExistingObject_test()
+	{
+		// TODO : Implémenter + @Before serveur
+		/*Client client = new Client(IP_ADDRESS, PORT);
+		try {
+			client.connect();
+		} catch (IOException e) {
+			fail("Tentative de connection échouée");
+		}
+		
+		client.remove("NotExistingKeyObject");*/
+	}
+	
+	@Test
 	public void ClientRemoveStoredObject_test()
 	{
-		/*
-		String ipAddr = "127.0.0.1";
-		int port = 6666;
-		
-		Client client = new Client(ipAddr, port);
+		// TODO : Implémenter + @Before serveur
+		/*Client client = new Client(IP_ADDRESS, PORT);
 		client.connect();
-		assertEquals(client.store("MaClef", "MaChaineDeCaractères"), RequestResult.STORED_SUCCESSFULY);
+		assertEquals("Résultat de la requête de stockage", client.store("MaClef", "MaChaineDeCaractères"), RequestResult.STORED_SUCCESSFULY);
 		client.disconnect();
 		
-		client = new Client(ipAddr, port);
+		client = new Client(IP_ADDRESS, PORT);
 		client.connect();
-		assertTrue(client.remove("MaClef"));
-		*/
+		assertTrue(client.remove("MaClef"));*/
 	}
 	
 	@Test
 	public void ClientDisconnect_test()
-	{
+	{	
+		// TODO : Implémenter (@Before serveur)
+		/*Client client = new Client(IP_ADDRESS, PORT);
+		try 
+		{
+			client.connect();
+		} catch (IOException e) {
+			fail("Connection au serveur échouée");
+		}
 		
+		assertTrue("Connection effective", client.isConnected());
+		client.disconnect();
+		assertFalse("Deconnexion effective", client.isConnected());
+		*/
 	}
 }

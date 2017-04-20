@@ -1,10 +1,5 @@
 package devops.cupofkey.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Base64;
-
 /**
  * Container contenant les informations d'une requete
  */
@@ -71,12 +66,12 @@ public class Request extends SerialClass{
 	 * @param key
 	 * @param indice
 	 */
-	public Request(CommandType cmdtype, DataType dType, String key, int indice){
+	public Request(CommandType cmdtype, DataType dType, String key, int value){
 		this.cmdtype	= cmdtype;
 		this.dataType		= dType;
-		this.indice		= indice;
+		this.indice		= 0;
 		this.key		= key;
-		this.data		= null;
+		this.data		= String.valueOf(value);
 	}
 	
 	/**
@@ -127,18 +122,16 @@ public class Request extends SerialClass{
 		return this.data;
 	}
 	
-	/** 
-     * Read the object from Base64 string. 
-     * @param s la chaine de la classe serializee
-     * @return une nouvelle instance de la classe Response
-     * @throws IOException 
-     * @throws ClassNotFoundException 
-     */
-	public static Request deserialize(String s) throws IOException , ClassNotFoundException {
-		byte [] data			= Base64.getDecoder().decode(s);
-		ObjectInputStream ois	= new ObjectInputStream(new ByteArrayInputStream(data));
-		Request resp			= (Request)ois.readObject();
-		ois.close();
-		return resp;
-   }
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("Request\n");
+		builder.append("CommandType : " + this.getCommandType() + "\n");
+		builder.append("DataType : " + this.getDataType() + "\n");
+		builder.append("Key : " + this.getKey() + "\n");
+		builder.append("Data : " + this.getData() + "\n");
+		builder.append("Indice : " + this.getIndice() + "\n");
+		
+		return builder.toString();
+	}
 }
