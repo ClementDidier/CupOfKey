@@ -15,13 +15,14 @@ import devops.cupofkey.core.Response;
 public class RequestTest {
 	
 	@Test
-	public void testconstructeur1(){
-		Request toto = new Request(CommandType.GET, DataType.INTEGER,"toto",5,"42");
-		assertEquals(toto.getCommandType(), CommandType.GET);
-		assertEquals(toto.getDataType(), DataType.INTEGER);
-		assertEquals(toto.getKey(),"toto");
-		assertEquals(toto.getIndice(),5);
-		assertEquals(toto.getData(),"42");
+	public void testconstructeur1()
+	{
+		Request req = new Request(CommandType.GET, DataType.INTEGER,"toto",5,"42");
+		assertEquals("Type de commande de la requête", CommandType.GET, req.getCommandType());
+		assertEquals("Type de données de la requête", DataType.INTEGER, req.getDataType());
+		assertEquals("Clé des données", "toto", req.getKey());
+		assertEquals("Indice des données dans la structure serveur", 5, req.getIndice());
+		assertEquals("Données de la requête", "42", req.getData());
 	}
 	
 	@Test(expected = ClassNotFoundException.class)
@@ -58,10 +59,10 @@ public class RequestTest {
 		
 		try {
 			Request deserial = Request.deserialize(serial, Request.class);
-			assertEquals("Type de commande de la requête", deserial.getCommandType(), CommandType.SET);
-			assertEquals("Type des données de la requête", deserial.getDataType(), DataType.INTEGER);
-			assertEquals("Clé des données à stocker", deserial.getKey(),"key");
-			assertEquals("Données à stocker", deserial.getData(), "12");
+			assertEquals("Type de commande de la requête", CommandType.SET, deserial.getCommandType());
+			assertEquals("Type des données de la requête", DataType.INTEGER, deserial.getDataType());
+			assertEquals("Clé des données à stocker", "key", deserial.getKey());
+			assertEquals("Données à stocker", "12", deserial.getData());
 			
 		} catch (IOException | ClassNotFoundException e) {
 			fail("Erreur lors de la deserialisation");
