@@ -1,5 +1,7 @@
 package devops.cupofkey.core;
 
+import java.util.List;
+
 /**
  * Container contenant les informations d'une requete
  */
@@ -29,64 +31,23 @@ public class Request extends SerialClass{
 	/**
 	 * Donnees (optionnelle) de la requete
 	 */
-	private final String		data;
+	private final List<String>	data;
 	
 	/**
 	 * @param cmdtype type de la commande
 	 * @param dType type des données
-	 * @param indice indice 
-	 * @param key
-	 * @param data
+	 * @param key cle definie par le client ou sont/seront stocker les donnees
+	 * @param indice indice souhaite (optionnel) de la liste ou sont stockee les donnee a l'indice indice
+	 * @param data une liste de String representant des donnees eventuelles
 	 */
-	public Request(CommandType cmdtype, DataType dType, String key, int indice, String data){
+	public Request(CommandType cmdtype, DataType dType, String key, int indice, List<String> data){
 		this.cmdtype	= cmdtype;
-		this.dataType		= dType;
+		this.dataType	= dType;
 		this.indice		= indice;
 		this.key		= key;
 		this.data		= data;
 	}
 
-	/**
-	 * @param cmdtype
-	 * @param dType
-	 * @param key
-	 * @param data
-	 */
-	public Request(CommandType cmdtype, DataType dType, String key, String data){
-		this.cmdtype	= cmdtype;
-		this.dataType		= dType;
-		this.indice		= 0;
-		this.key		= key;
-		this.data		= data;
-	}
-	
-	/**
-	 * @param cmdtype
-	 * @param dType
-	 * @param key
-	 * @param indice
-	 */
-	public Request(CommandType cmdtype, DataType dType, String key, int value){
-		this.cmdtype	= cmdtype;
-		this.dataType		= dType;
-		this.indice		= 0;
-		this.key		= key;
-		this.data		= String.valueOf(value);
-	}
-	
-	/**
-	 * @param cmdtype
-	 * @param dType
-	 * @param key
-	 */
-	public Request(CommandType cmdtype, DataType dType, String key) {
-		this.cmdtype	= cmdtype;
-		this.dataType		= dType;
-		this.indice		= 0;
-		this.key		= key;
-		this.data		= null;
-	}
-	
 	/**
 	 * @return le type de la requete
 	 */
@@ -118,10 +79,19 @@ public class Request extends SerialClass{
 	/**
 	 * @return retourne les donnees de la requete
 	 */
-	public String getData() {
+	public List<String> getData() {
 		return this.data;
 	}
 	
+	/**
+	 * @param index indice dans la liste
+	 * @return retourne les donnees de la requete
+	 */
+	public String getData(int index) {
+		return this.data.get(index);
+	}
+	
+	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();

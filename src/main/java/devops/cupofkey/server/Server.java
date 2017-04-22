@@ -6,11 +6,12 @@ public class Server {
 	
 	
 	/**
-	 * Lance un serveur de donn�es
+	 * Lance un serveur de donnees
 	 * @param args UNUSED
 	 */
 	public static void main(String[] args) {
-		Dispatcher dispatcher = new Dispatcher();
+		Database 	db 			= new Database();
+		Dispatcher 	dispatcher 	= new Dispatcher(db);
 		dispatcher.start();
 	}
 }

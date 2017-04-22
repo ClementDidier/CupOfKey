@@ -6,6 +6,7 @@ import java.net.ConnectException;
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
 import devops.cupofkey.core.Request;
+import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
 import devops.cupofkey.core.SerialClass;
 
@@ -45,14 +46,15 @@ public class Client
 	 */
 	public RequestResult store(String key, String str) throws IOException
 	{
-		Request request = new Request(CommandType.SET, DataType.STRING, key, str);
+		//Request request = new Request(CommandType.SET, DataType.STRING, key, str);
+		Request request = RequestFactory.createRequest(CommandType.SET, DataType.STRING, key, str);
 		this.connecter.send(request.serialize());
 		
 		String recvMsg = this.connecter.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = Response.deserialize(recvMsg, Response.class);
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
 			return RequestResult.STORED_SUCCESSFULY;
@@ -72,14 +74,15 @@ public class Client
 	 */
 	public RequestResult store(String key, int val) throws IOException 
 	{
-		Request request = new Request(CommandType.SET, DataType.INTEGER, key, val);
+		//Request request = new Request(CommandType.SET, DataType.INTEGER, key, val);
+		Request request = RequestFactory.createRequest(CommandType.SET, DataType.INTEGER, key, val);
 		this.connecter.send(request.serialize());
 		
 		String recvMsg = this.connecter.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = Response.deserialize(recvMsg, Response.class);
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
 			return RequestResult.STORED_SUCCESSFULY;
@@ -102,14 +105,16 @@ public class Client
 	{
 		String so = object.serialize();
 		
-		Request storeRequest = new Request(CommandType.SET, DataType.OBJECT, key, so);
+		//Request storeRequest = new Request(CommandType.SET, DataType.OBJECT, key, so);
+		Request storeRequest = RequestFactory.createRequest(CommandType.SET, DataType.OBJECT, key, so);
+		
 		this.connecter.send(storeRequest.serialize());
 		
 		String recvMsg = this.connecter.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = Response.deserialize(recvMsg, Response.class);
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
 			return RequestResult.STORED_SUCCESSFULY;

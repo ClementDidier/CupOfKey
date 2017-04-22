@@ -66,7 +66,8 @@ public class ClientSocket extends Socket
 	/**
 	 * Ferme la communication, ne fait rien si déjà fermée
 	 */
-	public void close()
+	@Override
+	public synchronized void close()
 	{
 		if(this.isConnected() && !this.isClosed())
 			this.close();

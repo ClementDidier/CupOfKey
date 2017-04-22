@@ -1,5 +1,8 @@
 package devops.cupofkey.core;
 
+/**
+ * represente le type de la commande presente dans une requete client
+ */
 public enum CommandType {	
 	/**
 	 * Retourne l'element (indice en parametre) de la liste (key en parametre).

@@ -1,5 +1,8 @@
 package devops.cupofkey.core;
 
+/**
+ * Représente le type des donnee presente dans une request client ou une response serveur
+ */
 public enum DataType 
 {
 	/**
@@ -10,14 +13,6 @@ public enum DataType
 	 * Type chaine
 	 */
 	STRING,
-	/**
-	 * type liste d'entier
-	 */
-	INT_LIST,
-	/**
-	 * type de liste de chaine
-	 */
-	STRING_LIST,
 	/**
 	 * type inconnu
 	 */

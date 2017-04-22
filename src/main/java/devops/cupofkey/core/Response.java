@@ -1,7 +1,10 @@
 package devops.cupofkey.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Represente une r�ponse du serveur � un client suite � une requ�te.
+ * Represente une reponse du serveur a un client suite a une requete.
  */
 public class Response extends SerialClass {
 
@@ -13,33 +16,33 @@ public class Response extends SerialClass {
 	/**
 	 * type d'erreur, peut etre null
 	 */
-	private final ErrorType	error;
+	private final ErrorType error;
 	
 	/**
 	 * donnees serializees de la reponse
 	 */
-	private final String	data;
+	private final List<String> data;
 	
 	/**
-	 * @param error nom de l'erreur eventuelle
+	 * @param error nom de l'erreur
 	 */
 	public Response(ErrorType error){
 		this.error	= error;
-		this.data	= null;
+		this.data	= new ArrayList<String>();
 	}
 	
 	/**
-	 * @param data donn�es serializ�es
+	 * @param data list des donnees serializees retournee par le serveur
 	 */
-	public Response(String data){
-		this.error	= null;
+	public Response(List<String> data){
+		this.error	= ErrorType.NO_ERROR;
 		this.data	= data;
 	}
 	
 	/**
-	 * @return les donn�es de la r�ponse
+	 * @return les donnees de la reponse
 	 */
-	public String getData(){
+	public List<String> getData(){
 		return this.data;
 	}
 	
