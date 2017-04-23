@@ -1,12 +1,15 @@
 package devops.cupofkey.server;
 
+import java.io.Serializable;
 import java.util.List;
+
+import devops.cupofkey.core.DataType;
 
 /**
  * Represente une entree de la Base de donnees.
  * Les entrees de la Base de donnees sont des Liste d'entier ou de String ayant chacune des operation distinctes
  */
-public interface DBEntry {
+public interface DBEntry extends Serializable {
 
 	/**
 	 * Permet de recuperer les donnee presente a cet emplacement de la Base de donnee
@@ -51,5 +54,15 @@ public interface DBEntry {
 	 * @return vrai si la liste est vide, faux sinon
 	 */
 	public abstract boolean isEmpty();
+	
+	/**
+	 * @return le nom de la cle de l'entree
+	 */
+	public String getKey();
+	
+	/**
+	 * @return le type des donnees representees
+	 */
+	public DataType getType();
 	
 }

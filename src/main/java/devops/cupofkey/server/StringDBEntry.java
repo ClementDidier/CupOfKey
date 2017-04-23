@@ -2,6 +2,7 @@ package devops.cupofkey.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import devops.cupofkey.core.DataType;
 
 /**
  * Encapsule le stockage d'objet de Type String ou d'objet serialize dans la Base de donnee.
@@ -11,15 +12,27 @@ import java.util.List;
 public class StringDBEntry implements DBEntry {
 	
 	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 3885020599405490913L;
+	
+	/**
 	 * liste de String permettant de stocker des String a un emplacement de la base de donnee
 	 */
 	private final List<String> masterList;
-
+	
+	/**
+	 * le nom de la cle de l'entree
+	 */
+	private final String key;
+	
 	/**
 	 * Initialise une liste de String permettant de stocker des String a un emplacement de la base de donnee
+	 * @param key le nom de la cle de l'entree 
 	 */
-	public StringDBEntry() {
+	public StringDBEntry(String key) {
 		this.masterList	= new ArrayList<String>();
+		this.key = key;
 	}
 
 	@Override
@@ -63,6 +76,16 @@ public class StringDBEntry implements DBEntry {
 	@Override
 	synchronized public boolean isEmpty() {
 		return this.masterList.isEmpty();
+	}
+
+	@Override
+	public String getKey() {
+		return this.key;
+	}
+
+	@Override
+	public DataType getType() {
+		return DataType.STRING;
 	}
 
 }

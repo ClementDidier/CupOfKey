@@ -16,5 +16,6 @@ public enum DataType
 	/**
 	 * type inconnu
 	 */
+	@Deprecated
 	OBJECT
 }
