@@ -67,8 +67,8 @@ public class IntDBEntry implements DBEntry{
 	@SuppressWarnings("boxing")
 	@Override
 	synchronized public boolean increment(int value) {
-		for(Integer x : this.masterList){
-			x += value;
+		for (int i = 0; i < this.masterList.size(); i++) {
+		    this.masterList.set(i, this.masterList.get(i) + value);
 		}
 		return true;
 	}
@@ -76,8 +76,8 @@ public class IntDBEntry implements DBEntry{
 	@SuppressWarnings("boxing")
 	@Override
 	synchronized public boolean multiply(int value) {
-		for(Integer x : this.masterList){
-			x *= value;
+		for (int i = 0; i < this.masterList.size(); i++) {
+		    this.masterList.set(i, this.masterList.get(i) * value);
 		}
 		return true;
 	}

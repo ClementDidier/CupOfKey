@@ -56,6 +56,7 @@ public class CachedDB extends Thread {
 	 * Initialise une nouvelle instance de la base de donnee avec cache
 	 */
 	public CachedDB(){
+		super("CachedDBDeamon");
 		this.masterMap	= new ConcurrentHashMap<String, DBEntry>();
 		this.cacheQueue	= new ConcurrentLinkedQueue<String>();
 	}
@@ -64,7 +65,9 @@ public class CachedDB extends Thread {
 	public void run(){
 		while(!isInterrupted()){
 			while(this.cacheQueue.size() > MAX_CACHED_ENTRIES){
-				writeOnDisk(this.masterMap.get(this.cacheQueue.poll()));
+				String key = this.cacheQueue.poll();
+				writeOnDisk(this.masterMap.get(key));
+				this.masterMap.remove(key);
 			}
 			backupMasterList();
 			syncWait();
@@ -230,5 +233,12 @@ public class CachedDB extends Thread {
 		file.delete();
 		file = new File(STRING + key);
 		file.delete();
+	}
+	
+	/**
+	 * @return le nombre d'element en cache dans la mastermap, ne devrait etre utilise que pour les tests
+	 */
+	public int size(){
+		return this.masterMap.size();
 	}
 }
