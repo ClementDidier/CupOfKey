@@ -4,6 +4,7 @@ package devops.cupofkey;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -64,7 +65,7 @@ public class RequestTest {
 			assertEquals("Type de commande de la requête", CommandType.SET, deserial.getCommandType());
 			assertEquals("Type des données de la requête", DataType.INTEGER, deserial.getDataType());
 			assertEquals("Clé des données à stocker", "key", deserial.getKey());
-			assertEquals("Données à stocker", "12", deserial.getData());
+			assertEquals("Données à stocker", "12", deserial.getData().get(0));
 			
 		} catch (IOException | ClassNotFoundException e) {
 			fail("Erreur lors de la deserialisation");
