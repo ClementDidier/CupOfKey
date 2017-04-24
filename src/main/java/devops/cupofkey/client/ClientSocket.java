@@ -14,11 +14,17 @@ public class ClientSocket extends Socket
 	private String hostname;
 	private int port;
 	
+	private PrintWriter out;
+	private BufferedReader in;
+	
 	public ClientSocket(String hostname, int port)
 	{
 		super();
 		this.hostname = hostname;
 		this.port = port;
+		
+		this.out = null;
+		this.in = null;
 	}
 	
 	/**
@@ -29,6 +35,10 @@ public class ClientSocket extends Socket
 	{
 		InetSocketAddress inet = new InetSocketAddress(this.hostname,  this.port);
 		this.connect(inet, CONNEXION_TIMEOUT);
+		
+		this.in = new BufferedReader(new InputStreamReader(this.getInputStream()));
+		this.out = new PrintWriter(this.getOutputStream(), true);
+		
 	}
 	
 	/**
@@ -37,13 +47,8 @@ public class ClientSocket extends Socket
 	 * @throws IOException Jetée lorsqu'une erreur est survenue lors de l'envoi au serveur
 	 */
 	public void send(String message) throws IOException
-	{
-		if(!this.isConnected())
-			throw new IOException("La connection n'est pas active");
-		
-		PrintWriter out = new PrintWriter(this.getOutputStream(), true);
+	{	
 		out.println(message);
-		out.close();
 	}
 	
 	/**
@@ -53,23 +58,19 @@ public class ClientSocket extends Socket
 	 */
 	public String receive() throws IOException
 	{
-		if(!this.isConnected())
-			throw new IOException("Impossible de recevoir un message, la connection n'est pas effective");
-		
-		BufferedReader in = new BufferedReader(new InputStreamReader(this.getInputStream()));
-		String res = in.readLine();
-		in.close();
-		
-		return res;
+		return in.readLine();
 	}
 	
 	/**
-	 * Ferme la communication, ne fait rien si déjà fermée
+	 * Ferme la communication et libère des objets utilisés
 	 */
 	@Override
-	public synchronized void close()
+	public void close() throws IOException
 	{
-		if(this.isConnected() && !this.isClosed())
-			this.close();
+		super.close();
+		if(this.in != null)
+			this.in.close();
+		if(this.out != null)
+			this.out.close();
 	}
 }
