@@ -32,13 +32,13 @@ public class IntDBEntry implements DBEntry{
 	 * @param key le nom de la cle de l'entree
 	 */
 	public IntDBEntry(String key) {
-		this.masterList = new ArrayList<Integer>();
+		this.masterList = new ArrayList<>();
 		this.key = key;
 	}
 
 	@Override
 	synchronized public List<String> getEntry(int index) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 		if(index >= 0 && index < this.masterList.size() ){
 			res.add(String.valueOf(this.masterList.get(index)));
 		}

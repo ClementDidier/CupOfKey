@@ -57,8 +57,8 @@ public class CachedDB extends Thread {
 	 */
 	public CachedDB(){
 		super("CachedDBDeamon");
-		this.masterMap	= new ConcurrentHashMap<String, DBEntry>();
-		this.cacheQueue	= new ConcurrentLinkedQueue<String>();
+		this.masterMap	= new ConcurrentHashMap<>();
+		this.cacheQueue	= new ConcurrentLinkedQueue<>();
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class CachedDB extends Thread {
 	 * @param key une cle associee a une entree de la base de donnee
 	 * @return vrai si une entree de la base de donne associee a cette cle existe sur le disque, faux sinon
 	 */
-	private boolean containsKeyOnDisk(String key) {
+	private static boolean containsKeyOnDisk(String key) {
 		File fileInt = new File(INTEGER + key);
 		File fileStr = new File(STRING + key);
 		return fileInt.exists() || fileStr.exists();
@@ -172,6 +172,7 @@ public class CachedDB extends Thread {
 	/**
 	 * @param entry une nouvelle entree a ecrire sur le systeme de fichier
 	 */
+	@SuppressWarnings({ "static-method", "resource" })
 	synchronized private void writeOnDisk(DBEntry entry){
 		
 		char typeCode = INTEGER;
@@ -195,6 +196,7 @@ public class CachedDB extends Thread {
 	 * @param key une cle associe a une entree de la base de donnee
 	 * @return une entree DBEntry si le fichier associe a cette entree a ete trouve, null sinon
 	 */
+	@SuppressWarnings({ "static-method", "resource" })
 	synchronized private DBEntry readFromDisk(String key){
 		
 		try {
@@ -226,6 +228,7 @@ public class CachedDB extends Thread {
 	 * Supprime l'image disk associe a cette entree
 	 * @param key cle d'une entree de la base de donnee
 	 */
+	@SuppressWarnings("static-method")
 	synchronized private void deleteFromDisk(String key){
 		File file;
 		

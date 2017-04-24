@@ -12,6 +12,9 @@ import devops.cupofkey.server.CachedDB;
 import devops.cupofkey.server.DBEntry;
 import devops.cupofkey.server.IntDBEntry;
 
+/**
+ * Realise une serie de test afin de s'assurer le bon fonctionnement du cache serveur
+ */
 public class CachedDBTest {
 
 	/**

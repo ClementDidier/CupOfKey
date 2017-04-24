@@ -31,13 +31,13 @@ public class StringDBEntry implements DBEntry {
 	 * @param key le nom de la cle de l'entree 
 	 */
 	public StringDBEntry(String key) {
-		this.masterList	= new ArrayList<String>();
+		this.masterList	= new ArrayList<>();
 		this.key = key;
 	}
 
 	@Override
 	synchronized public List<String> getEntry(int index) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 		if(index >= 0 && index < this.masterList.size() ){
 			res.add(this.masterList.get(index));
 		}

@@ -12,7 +12,7 @@ public class Dispatcher extends Thread {
 	/**
 	 * Port ecoute par le seveur
 	 */
-	private final static int PORT = 8888;
+	private final int port;
 	
 	/**
 	 * Executor du pool de Thread gérant les connexion
@@ -25,20 +25,22 @@ public class Dispatcher extends Thread {
 	private final Database db;
 	
 	/**
+	 * @param port port de ce serveur secondaire
 	 * @param db service de stockage de la Base de données
 	 */
-	public Dispatcher(Database db) {
+	public Dispatcher(int port, Database db) {
 		this.executor 	= (ThreadPoolExecutor) Executors.newCachedThreadPool();
 		this.db 		= db;
+		this.port 		= port;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void run(){
 		try {
-			ServerSocket socketServeur = new ServerSocket(PORT);
-			System.out.println("Lancement du serveur");
+			ServerSocket socketServeur = new ServerSocket(this.port);
+			System.out.println("Lancement du serveur secondaire sur le port : " + this.port);
 			while (!isInterrupted()) {
-				@SuppressWarnings("resource")
 				Socket socketClient = socketServeur.accept();
 				RequestHandler t = new RequestHandler(socketClient,this.db);
 				this.executor.execute(t);

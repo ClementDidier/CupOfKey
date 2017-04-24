@@ -30,5 +30,9 @@ public enum ErrorType
 	/**
 	 * Faux
 	 */
-	FALSE
+	FALSE, 
+	/**
+	 * Erreur serveur
+	 */
+	INTERNAL_SERVER_ERROR
 }
