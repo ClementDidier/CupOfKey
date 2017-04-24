@@ -61,12 +61,15 @@ public class Dispatcher extends Thread {
 				RequestHandler t = new RequestHandler(socketClient, this.db);
 				this.executor.execute(t);
 			}
-			
+
 			// Demande l'arrêt immédiat de chaque thread du Pool
 			this.executor.shutdownNow();
 			
 			// Attend la terminaison de tous les threads avec un timeout de 2s
 			this.executor.awaitTermination(2, TimeUnit.SECONDS);
+			
+			// termine le socket server
+			this.socketServeur.close();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

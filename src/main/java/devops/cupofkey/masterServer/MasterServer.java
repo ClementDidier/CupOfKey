@@ -35,7 +35,7 @@ public class MasterServer {
 				throw new Exception("Liste de serveurs secondaires vide");
 			}
 		} catch (Exception e) {
-			System.out.println("Veuillez fournir en argument le nom d'un fichier de configuration associe a une liste de serveur distant");
+			System.out.println("Veuillez fournir en argument le nom d'un fichier de configuration associe a une liste de serveurs secondaires distant");
 			System.out.println("Le fichier contient un serveur par ligne represente de la forme:");
 			System.out.println("hostname:port");
 			System.out.println("un fichier exemple data/servers.txt est fourni");

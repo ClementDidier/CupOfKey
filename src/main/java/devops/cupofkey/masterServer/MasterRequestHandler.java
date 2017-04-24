@@ -99,7 +99,7 @@ public class MasterRequestHandler implements Runnable {
 		try {
 			int idSecondaireServeur = key.hashCode() % this.nbServeur;
 			InetSocketAddress inet = new InetSocketAddress(this.servers.get(idSecondaireServeur).getHostName(),this.servers.get(idSecondaireServeur).getPort());
-			Socket socket = new Socket(this.servers.get(idSecondaireServeur).getHostName(), 6789);
+			Socket socket = new Socket(this.servers.get(idSecondaireServeur).getHostName(), this.servers.get(idSecondaireServeur).getPort());
 			socket.connect(inet, CONNEXION_TIMEOUT);
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));

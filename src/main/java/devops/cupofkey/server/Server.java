@@ -11,8 +11,7 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		try {
-			Database 	db 			= new Database();
-			Dispatcher 	dispatcher 	= new Dispatcher(Integer.valueOf(args[0]),db);
+			Dispatcher 	dispatcher 	= new Dispatcher(Integer.valueOf(args[0]));
 			dispatcher.start();
 		} catch (Exception e) {
 			System.out.println("Veuillez preciser en argument le port de ce serveur");
