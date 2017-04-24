@@ -3,6 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Classe recevant des connexions clients, creant un Thread par client pour traiter les requetes.
@@ -10,7 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class Dispatcher extends Thread {
 	
 	/**
-	 * Port ecoute par le seveur
+	 * Port d'écoute du serveur
 	 */
 	private final int port;
 	
@@ -25,30 +26,61 @@ public class Dispatcher extends Thread {
 	private final Database db;
 	
 	/**
-	 * @param port port de ce serveur secondaire
+	 * Socket du server
+	 */
+	private ServerSocket socketServeur;
+	
+	/**
+	 * @param port port du serveur secondaire
 	 * @param db service de stockage de la Base de données
 	 */
-	public Dispatcher(int port, Database db) {
+	protected Dispatcher(int port, Database db) {
 		this.executor 	= (ThreadPoolExecutor) Executors.newCachedThreadPool();
 		this.db 		= db;
 		this.port 		= port;
 	}
+	
+	/**
+	 * @param port le port du serveur
+	 */
+	public Dispatcher(int port) {
+		this(port, new Database());
+	}
 
+	
 	@SuppressWarnings("resource")
 	@Override
 	public void run(){
-		try {
-			ServerSocket socketServeur = new ServerSocket(this.port);
+		try
+		{
+			this.socketServeur = new ServerSocket(this.port);
 			System.out.println("Lancement du serveur secondaire sur le port : " + this.port);
-			while (!isInterrupted()) {
-				Socket socketClient = socketServeur.accept();
-				RequestHandler t = new RequestHandler(socketClient,this.db);
+			while (!isInterrupted()) 
+			{
+				Socket socketClient = this.socketServeur.accept();
+				RequestHandler t = new RequestHandler(socketClient, this.db);
 				this.executor.execute(t);
 			}
-			socketServeur.close();
+			
+			// Demande l'arrêt immédiat de chaque thread du Pool
+			this.executor.shutdownNow();
+			
+			// Attend la terminaison de tous les threads avec un timeout de 2s
+			this.executor.awaitTermination(2, TimeUnit.SECONDS);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Obtient le port d'écoute courant du serveur, -1 s'il n'est pas encore en écoute sur un port
+	 * @return Le port d'écoute actuel, -1 dans le cas où le serveur n'est pas en écoute
+	 */
+	public int getPort()
+	{
+		if(this.socketServeur != null)
+			return this.socketServeur.getLocalPort();
+		return -1;
 	}
 }

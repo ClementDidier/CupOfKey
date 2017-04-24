@@ -62,11 +62,14 @@ public class RequestHandler implements Runnable {
 			PrintStream output			= new PrintStream(this.socket.getOutputStream());		
 			String requestString		= input.readLine();
 
-			Request requestPackage		= SerialClass.deserialize(requestString, Request.class);
-
-			Response responsePackage	= generateResponse(requestPackage);
-			
-			output.println(responsePackage.serialize());
+			if(requestString != null)
+			{
+				Request requestPackage		= SerialClass.deserialize(requestString, Request.class);
+	
+				Response responsePackage	= generateResponse(requestPackage);
+				
+				output.println(responsePackage.serialize());
+			}
 			
 		} 
 		catch (Exception e) {

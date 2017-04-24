@@ -1,5 +1,6 @@
 package devops.cupofkey.client;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.ConnectException;
 
@@ -10,7 +11,7 @@ import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
 import devops.cupofkey.core.SerialClass;
 
-public class Client
+public class Client implements Closeable
 {
 	private ClientSocket connecter;
 	
@@ -35,6 +36,11 @@ public class Client
 	public boolean isConnected()
 	{
 		return this.connecter.isConnected();
+	}
+	
+	public boolean isClosed()
+	{
+		return this.connecter.isClosed();
 	}
 	
 	/**
@@ -126,9 +132,10 @@ public class Client
 	}
 
 	/**
-	 * Déconnecte le client du serveur de stockage auquel il est connecté, ne fait rien s'il n'est pas connecté
+	 * Ferme la communication avec le serveur et libère les ressources utilisées
+	 * @throws IOException Jetée lorsqu'une erreur survient lors de la fermeture de la communication ou de la libération des ressources utilisées
 	 */
-	public void disconnect() 
+	public void close() throws IOException 
 	{
 		this.connecter.close();
 	}
