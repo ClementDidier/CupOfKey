@@ -47,6 +47,15 @@ public class Request extends SerialClass{
 		this.key		= key;
 		this.data		= data;
 	}
+	
+	public Request(CommandType cmdtype, String key){
+		this.cmdtype	= cmdtype;
+		this.dataType	= null;
+		this.indice		= 0;
+		this.key		= key;
+		this.data		= null;
+	}
+	
 
 	/**
 	 * @return le type de la requete
