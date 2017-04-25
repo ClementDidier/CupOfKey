@@ -27,6 +27,24 @@ public class RequestTest {
 		assertEquals("Données de la requête", "42", req.getData(0));
 	}
 	
+	@Test
+	public void testconstructeur2()
+	{
+		Request req = RequestFactory.createSuppressionRequest("toto");
+		assertEquals("Type de commande de la requête", CommandType.CLEAR, req.getCommandType());
+		assertEquals("Clé des données", "toto", req.getKey());
+;
+	}
+	@Test
+	public void testconstructeur3()
+	{
+		Request req = RequestFactory.createRemoveRequest("toto",5);
+		assertEquals("Type de commande de la requête", CommandType.DELETE, req.getCommandType());
+		assertEquals("Clé des données", "toto", req.getKey());
+		assertEquals("Indice des données dans la structure serveur", 5, req.getIndice());
+	}
+	
+	
 	@Test(expected = ClassNotFoundException.class)
 	public void serializeDeserializeFail_test() throws ClassNotFoundException
 	{

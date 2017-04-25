@@ -86,4 +86,14 @@ public class RequestFactory {
 		ArrayList<String> data = new ArrayList<String>();
 		return new Request(cmdtype, dType, key, 0, data);
 	}
+	
+	public static Request createSuppressionRequest(String key){
+		return new Request(CommandType.CLEAR,key);
+	}
+	
+	public static Request createRemoveRequest(String key,int indice){
+		return new Request(CommandType.DELETE,null,key,indice,null);
+	}
+	
+	
 }
