@@ -134,7 +134,7 @@ public class ClientTest
 		}
 	}
 	
-	@Test
+	/*@Test
 	public void ClientStoreCustomSerialClassObject_test()
 	{	
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
@@ -150,7 +150,7 @@ public class ClientTest
 			e.printStackTrace();
 			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
 		}
-	}
+	}*/
 	
 	@Test
 	public void ClientRemoveNotExistingObject_test()

@@ -6,6 +6,7 @@ import java.net.ConnectException;
 
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
+import devops.cupofkey.core.ErrorType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
@@ -73,6 +74,39 @@ public class Client implements Closeable
 	}
 	
 	/**
+	 * Obtient l'état d'existance de la clé donnée
+	 * @param key La clé à tester
+	 * @return True si la clé existe, False dans tous les autres cas possibles
+	 * @throws IOException Jetée lorsqu'une erreur de communication survient
+	 */
+	public boolean keyExists(String key) throws IOException
+	{
+		// TODO : Revoir Factory
+		Request request = RequestFactory.createRequest(CommandType.EMPTY, null, key);
+		String serial = request.serialize();
+		this.socket.send(serial);
+		String rcv = this.socket.receive();
+		
+		try { 
+			Response resp = Response.deserialize(rcv,  Response.class);
+		
+			switch(resp.getError())
+			{
+				case FALSE:
+					return false;
+				case TRUE:
+					return true;
+				default:
+					return false;
+			}
+		}
+		catch(ClassNotFoundException e)
+		{
+			return false;
+		}
+	}
+	
+	/**
 	 * Réalise une demande de stockage de chaîne de caractères auprès du serveur
 	 * @param key La clé de stockage voulue
 	 * @param str La chaîne de caractères à stocker
@@ -88,11 +122,16 @@ public class Client implements Closeable
 		String recvMsg = this.socket.receive();
 		try 
 		{
-			@SuppressWarnings("unused")
 			Response response = Response.deserialize(recvMsg, Response.class);
-			//TODO : Implémenter
-
-			return RequestResult.SUCCESS;
+			switch(response.getError())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
 		} 
 		catch (ClassNotFoundException e) 
 		{
@@ -104,6 +143,12 @@ public class Client implements Closeable
 	 * Réalise une demande de stockage d'entier après du serveur
 	 * @param key La clé de stockage voulue
 	 * @param val La valeur de l'entier à stocker
+	 * <pre>
+	 * KEY_NOT_FOUND Cas de clé inexistante
+	 * SUCCESS Cas de suppression avec succés
+	 * FAILED Cas de requête échouée sans informations supplémentaires
+	 * INVALID_RESPONSE Cas de réponse invalide fournie par le serveur
+	 * </pre>
 	 * @return Le status de la requête
 	 * @throws IOException Jetée lorsque la connection n'est pas active
 	 */
@@ -116,11 +161,16 @@ public class Client implements Closeable
 		String recvMsg = this.socket.receive();
 		try 
 		{
-			@SuppressWarnings("unused")
 			Response response = Response.deserialize(recvMsg, Response.class);
-			//TODO : Implémenter
-
-			return RequestResult.SUCCESS;
+			switch(response.getError())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
 		} 
 		catch (ClassNotFoundException e) 
 		{
@@ -135,6 +185,7 @@ public class Client implements Closeable
 	 * @return Le status de la requête
 	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée, ou qu'un problème est servenu lors de la communication
 	 */
+	/*
 	public RequestResult store(String key, SerialClass object) throws IOException
 	{
 		String serialObject = object.serialize();
@@ -146,7 +197,6 @@ public class Client implements Closeable
 		String recvMsg = this.socket.receive();
 		try 
 		{
-			@SuppressWarnings("unused")
 			Response response = Response.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
@@ -156,22 +206,45 @@ public class Client implements Closeable
 		{
 			return RequestResult.INVALID_RESPONSE;
 		}
-	}
+	}*/
 	
 	/**
 	 * Supprime l'élément identifié par la clé donnée
 	 * @param key La clé de l'élément à supprimer
-	 * @return Le status de la requête (KEY_NOT_FOUND en cas de clé inexistante, SUCCESS dans le cas d'une suppression avec succés)
+	 * @return Le status de la requête 
+	 * <pre>
+	 * KEY_NOT_FOUND Cas de clé inexistante
+	 * SUCCESS Cas de suppression avec succés
+	 * FAILED Cas de requête échouée sans informations supplémentaires
+	 * INVALID_RESPONSE Cas de réponse invalide fournie par le serveur
+	 * </pre>
 	 * @exception IOException Jetée lorsqu'un problème de communication est survenu
 	 */
 	public RequestResult remove(String key) throws IOException
 	{
-		//TODO : Implémenter
-		return RequestResult.SUCCESS;
+		Request request = RequestFactory.createSuppressionRequest(key);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
 		
-		//Request request = RequestFactory.createRequest(CommandType.DELETE, key);
-		//String serialRequest = request.serialize();
-		//this.socket.send(serialRequest);
+		String serialResponse = this.socket.receive();
+		try 
+		{
+			Response response = Response.deserialize(serialResponse, Response.class);
+
+			switch(response.getError())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
 	}
 	
 	/**
@@ -182,9 +255,9 @@ public class Client implements Closeable
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
 	 */
-	public Object get(String key, Class<? extends SerialClass> objectType) throws IOException, ClassNotFoundException
+	/*public Object get(String key, Class<? extends SerialClass> objectType) throws IOException, ClassNotFoundException
 	{
-		Request request = RequestFactory.createRequest(CommandType.GET, key);
+		Request request = RequestFactory.;
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
@@ -193,7 +266,7 @@ public class Client implements Closeable
 		
 		Object obj = SerialClass.deserialize(response.getData().get(0), objectType);
 		return obj;
-	}
+	}*/
 
 	/**
 	 * Ferme la communication avec le serveur et libère les ressources utilisées

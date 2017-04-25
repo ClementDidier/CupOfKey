@@ -118,11 +118,15 @@ public class Database {
 	/**
 	 * permet de supprimer toutes les donnees presente a un emplacement de la base de donnee
 	 * @param key la cle definie par le client associe aux donnees a traiter
-	 * @return retourne toujours une reponse de type d'erreur NO_ERROR.
+	 * @return retourne NO_DATA lorsque la clé donnée est inexistante et NO_ERROR lorsque la suppression s'est faite avec succés
 	 */
 	protected Response clear(String key){
-		this.masterDB.remove(key);
-		return new Response(ErrorType.NO_ERROR);
+		if(this.masterDB.containsKey(key))
+		{
+			this.masterDB.remove(key);
+			return new Response(ErrorType.NO_ERROR);
+		}
+		return new Response(ErrorType.NO_DATA);
 	}
 	
 	/**
