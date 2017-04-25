@@ -86,11 +86,18 @@ public class RequestFactory {
 		ArrayList<String> data = new ArrayList<String>();
 		return new Request(cmdtype, dType, key, 0, data);
 	}
-	
+	/**
+	 * @param key cle definie par le client ou sont stocker les donnees a supprimer
+	 * @return une Requete pouvant etre envoyee vers le serveur
+	 */
 	public static Request createSuppressionRequest(String key){
 		return new Request(CommandType.CLEAR,key);
 	}
-	
+	/**
+	 * @param key cle definie par le client sont stocker la liste des donnees a supprimer
+	 * @param indice indice souhaite de la liste ou sont stockee les donnee a l'indice indice
+	 * @return une Requete pouvant etre envoyee vers le serveur
+	 */
 	public static Request createRemoveRequest(String key,int indice){
 		return new Request(CommandType.DELETE,null,key,indice,null);
 	}
