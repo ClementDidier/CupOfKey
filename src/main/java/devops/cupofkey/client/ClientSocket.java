@@ -68,6 +68,7 @@ public class ClientSocket extends Socket
 	public void close() throws IOException
 	{
 		super.close();
+		
 		if(this.in != null)
 			this.in.close();
 		if(this.out != null)

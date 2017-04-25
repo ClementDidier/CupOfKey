@@ -13,11 +13,36 @@ import devops.cupofkey.core.SerialClass;
 
 public class Client implements Closeable
 {
-	private ClientSocket connecter;
+	/**
+	 * Le port d'écoute par défaut du serveur
+	 */
+	private final static int DEFAULT_PORT = 0;
 	
-	public Client(String hostname, int port) 
+	/**
+	 * Le socket de communication
+	 */
+	private ClientSocket socket;
+	
+	/**
+	 * Créer une nouvelle instance de Client et le connecte au serveur spécifié
+	 * @param hostname L'adresse du serveur
+	 * @param port Le port d'écoute du serveur
+	 * @throws IOException Jetée lorsqu'une erreur de connection est survenue
+	 */
+	public Client(String hostname, int port) throws IOException 
 	{	
-		this.connecter = new ClientSocket(hostname, port);
+		this.socket = new ClientSocket(hostname, port);
+		this.socket.connect();
+	}
+	
+	/**
+	 * Créer une nouvelle instance de Client et le connecte au serveur spécifié avec le port d'écoute par défaut
+	 * @param hostname L'adresse du serveur
+	 * @throws IOException Jetée lorsqu'une erreur de connection est survenue
+	 */
+	public Client(String hostname) throws IOException
+	{
+		this(hostname, DEFAULT_PORT);
 	}
 	
 	/**
@@ -26,7 +51,7 @@ public class Client implements Closeable
 	 */
 	public void connect() throws IOException
 	{
-		this.connecter.connect();
+		this.socket.connect();
 	}
 	
 	/**
@@ -35,12 +60,16 @@ public class Client implements Closeable
 	 */
 	public boolean isConnected()
 	{
-		return this.connecter.isConnected();
+		return this.socket.isConnected();
 	}
 	
+	/**
+	 * Obtient le status du socket de communication
+	 * @return True si le socket de communication est fermé, False dans le cas contraire
+	 */
 	public boolean isClosed()
 	{
-		return this.connecter.isClosed();
+		return this.socket.isClosed();
 	}
 	
 	/**
@@ -54,16 +83,16 @@ public class Client implements Closeable
 	{
 		//Request request = new Request(CommandType.SET, DataType.STRING, key, str);
 		Request request = RequestFactory.createRequest(CommandType.SET, DataType.STRING, key, str);
-		this.connecter.send(request.serialize());
+		this.socket.send(request.serialize());
 		
-		String recvMsg = this.connecter.receive();
+		String recvMsg = this.socket.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			Response response = Response.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
-			return RequestResult.STORED_SUCCESSFULY;
+			return RequestResult.SUCCESS;
 		} 
 		catch (ClassNotFoundException e) 
 		{
@@ -80,18 +109,18 @@ public class Client implements Closeable
 	 */
 	public RequestResult store(String key, int val) throws IOException 
 	{
-		//Request request = new Request(CommandType.SET, DataType.INTEGER, key, val);
 		Request request = RequestFactory.createRequest(CommandType.SET, DataType.INTEGER, key, val);
-		this.connecter.send(request.serialize());
+		String serialObject = request.serialize();
+		this.socket.send(serialObject);
 		
-		String recvMsg = this.connecter.receive();
+		String recvMsg = this.socket.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			Response response = Response.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
-			return RequestResult.STORED_SUCCESSFULY;
+			return RequestResult.SUCCESS;
 		} 
 		catch (ClassNotFoundException e) 
 		{
@@ -104,31 +133,66 @@ public class Client implements Closeable
 	 * @param key La clé de stockage voulue
 	 * @param val L'objet serialisable à stocker
 	 * @return Le status de la requête
-	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée
-	 * @throws ConnectException Jetée lorsque la connection n'est pas active
+	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée, ou qu'un problème est servenu lors de la communication
 	 */
 	public RequestResult store(String key, SerialClass object) throws IOException
 	{
-		String so = object.serialize();
+		String serialObject = object.serialize();
 		
-		//Request storeRequest = new Request(CommandType.SET, DataType.OBJECT, key, so);
-		Request storeRequest = RequestFactory.createRequest(CommandType.SET, DataType.OBJECT, key, so);
+		Request storeRequest = RequestFactory.createRequest(CommandType.SET, DataType.OBJECT, key, serialObject);
 		
-		this.connecter.send(storeRequest.serialize());
+		this.socket.send(storeRequest.serialize());
 		
-		String recvMsg = this.connecter.receive();
+		String recvMsg = this.socket.receive();
 		try 
 		{
 			@SuppressWarnings("unused")
-			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			Response response = Response.deserialize(recvMsg, Response.class);
 			//TODO : Implémenter
 
-			return RequestResult.STORED_SUCCESSFULY;
+			return RequestResult.SUCCESS;
 		} 
 		catch (ClassNotFoundException e) 
 		{
 			return RequestResult.INVALID_RESPONSE;
 		}
+	}
+	
+	/**
+	 * Supprime l'élément identifié par la clé donnée
+	 * @param key La clé de l'élément à supprimer
+	 * @return Le status de la requête (KEY_NOT_FOUND en cas de clé inexistante, SUCCESS dans le cas d'une suppression avec succés)
+	 * @exception IOException Jetée lorsqu'un problème de communication est survenu
+	 */
+	public RequestResult remove(String key) throws IOException
+	{
+		//TODO : Implémenter
+		return RequestResult.SUCCESS;
+		
+		//Request request = RequestFactory.createRequest(CommandType.DELETE, key);
+		//String serialRequest = request.serialize();
+		//this.socket.send(serialRequest);
+	}
+	
+	/**
+	 * Obtient l'élément identifiable par la clé spécifiée
+	 * @param key La clé de l'élément à obtenir
+	 * @param objectType Le type de l'objet retourné
+	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
+	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
+	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 */
+	public Object get(String key, Class<? extends SerialClass> objectType) throws IOException, ClassNotFoundException
+	{
+		Request request = RequestFactory.createRequest(CommandType.GET, key);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialReception = this.socket.receive();
+		Response response = Response.deserialize(serialReception, Response.class);
+		
+		Object obj = SerialClass.deserialize(response.getData().get(0), objectType);
+		return obj;
 	}
 
 	/**
@@ -137,7 +201,7 @@ public class Client implements Closeable
 	 */
 	public void close() throws IOException 
 	{
-		this.connecter.close();
+		this.socket.close();
 	}
 }
 

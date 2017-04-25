@@ -5,17 +5,17 @@ public enum RequestResult
 	/**
 	 * Stockage réalisé avec succés sur le dépôt distant
 	 */
-	STORED_SUCCESSFULY,
-	/**
+	SUCCESS,
+	/*/**
 	 * Stockage non réalisé, le serveur n'a plus de capacité disponible
 	 */
-	ERROR_OUT_OF_MEMORY, 
+	/*ERROR_OUT_OF_MEMORY,*/ 
 	/**
 	 * Réponse reçue invalide
 	 */
 	INVALID_RESPONSE, 
 	/**
-	 * Elément supprimé avec succés sur le dépôt distant
+	 * Elément inexistant sur le dépôt distant, clé introuvable
 	 */
-	REMOVED_SUCCESSFULY
+	KEY_NOT_FOUND
 }

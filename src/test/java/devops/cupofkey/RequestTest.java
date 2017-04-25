@@ -39,7 +39,7 @@ public class RequestTest {
 		}
 		
 		try {
-			SerialClass.deserialize(serial, Response.class);
+			Response.deserialize(serial, Response.class);
 			
 			fail("Exception attendue non jetée");
 			
@@ -60,7 +60,7 @@ public class RequestTest {
 		}
 		
 		try {
-			Request deserial = SerialClass.deserialize(serial, Request.class);
+			Request deserial = Request.deserialize(serial, Request.class);
 			assertEquals("Type de commande de la requête", CommandType.SET, deserial.getCommandType());
 			assertEquals("Type des données de la requête", DataType.INTEGER, deserial.getDataType());
 			assertEquals("Clé des données à stocker", "key", deserial.getKey());
