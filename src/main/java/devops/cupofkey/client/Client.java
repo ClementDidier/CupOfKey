@@ -2,13 +2,10 @@ package devops.cupofkey.client;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
-import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
@@ -91,7 +88,6 @@ public class Client implements Closeable
 		
 		try { 
 			Response resp = SerialClass.deserialize(rcv,  Response.class);
-			System.out.println(resp.getResponseType());
 			switch(resp.getResponseType())
 			{
 				case FALSE:
@@ -341,7 +337,6 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 * @param objectType la classe associe a l'objet souhaite
 	 * @return un objet serializabl stocke a cet emplacement
 	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 * @throws InvalidResponseException 
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
@@ -377,7 +372,6 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @param index l'index de l'objet dans la liste
 	 * @return un objet serializabl stocke a cet emplacement
 	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 * @throws InvalidResponseException 
 	 * @throws RequestFailedException 
 	 * @throws KeyNotFoundException 
@@ -455,7 +449,6 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @param key cle sur laquelle incrementer
 	 * @param value valeur a ajouter aux donnees
 	 * @return un type de reponse en fonction du resultat
-	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
 	public RequestResult increment(String key, int value) throws IOException
@@ -490,7 +483,6 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @param key cle sur laquelle multiplier
 	 * @param value valeur a multiplier aux donnees
 	 * @return un type de reponse en fonction du resultat
-	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
 	public RequestResult multiply(String key, int value) throws IOException
