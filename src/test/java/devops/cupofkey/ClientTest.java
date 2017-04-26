@@ -18,6 +18,8 @@ import devops.cupofkey.client.InvalidResponseException;
 import devops.cupofkey.client.KeyNotFoundException;
 import devops.cupofkey.client.RequestFailedException;
 import devops.cupofkey.client.RequestResult;
+import devops.cupofkey.core.Response;
+import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.SerialClass;
 import devops.cupofkey.server.Dispatcher;
 import devops.cupofkey.server.master.DistantServer;
@@ -408,6 +410,20 @@ public class ClientTest
 			assertFalse("La connexion est fermée", client.isClosed());
 			boolean b = client.keyExists("CleNul");
 			assertFalse("La clé n'a pas été trouvé", b);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void ClientStoreObject_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			Response r = new Response(ResponseType.TRUE);
+			RequestResult result = client.store("CleObjet", r);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

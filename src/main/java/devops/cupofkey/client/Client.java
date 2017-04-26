@@ -187,13 +187,13 @@ public class Client implements Closeable
 	 * @return Le status de la requête
 	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée, ou qu'un problème est servenu lors de la communication
 	 */
-	/*
+	
 	public RequestResult store(String key, SerialClass object) throws IOException
 	{
 		String serialObject = object.serialize();
 		return store(key, serialObject);
 	}
-	*/
+	
 	/**
 	 * Supprime l'élément identifié par la clé donnée
 	 * @param key La clé de l'élément à supprimer
