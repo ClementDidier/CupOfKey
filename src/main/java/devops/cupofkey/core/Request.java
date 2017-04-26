@@ -40,15 +40,18 @@ public class Request extends SerialClass{
 	 * @param indice indice souhaite (optionnel) de la liste ou sont stockee les donnee a l'indice indice
 	 * @param data une liste de String representant des donnees eventuelles
 	 */
-	public Request(CommandType cmdtype, DataType dType, String key, int indice, List<String> data){
+	protected Request(CommandType cmdtype, DataType dType, String key, int indice, List<String> data){
 		this.cmdtype	= cmdtype;
 		this.dataType	= dType;
 		this.indice		= indice;
 		this.key		= key;
 		this.data		= data;
 	}
-	
-	public Request(CommandType cmdtype, String key){
+	/**
+	 * @param cmdtype type de la commande
+	 * @param key cle definie par le client ou sont/seront stocker les donnees
+	 */
+	protected Request(CommandType cmdtype, String key){
 		this.cmdtype	= cmdtype;
 		this.dataType	= null;
 		this.indice		= 0;

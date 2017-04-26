@@ -33,6 +33,8 @@ public class RequestTest {
 		Request req = RequestFactory.createSuppressionRequest("toto");
 		assertEquals("Type de commande de la requête", CommandType.CLEAR, req.getCommandType());
 		assertEquals("Clé des données", "toto", req.getKey());
+		assertNull(req.getData());
+		assertNull(req.getDataType());
 ;
 	}
 	@Test
@@ -42,7 +44,31 @@ public class RequestTest {
 		assertEquals("Type de commande de la requête", CommandType.DELETE, req.getCommandType());
 		assertEquals("Clé des données", "toto", req.getKey());
 		assertEquals("Indice des données dans la structure serveur", 5, req.getIndice());
+		assertNull(req.getData());
+		assertNull(req.getDataType());
 	}
+	@Test
+	public void testconstructeur4(){
+		Request req = RequestFactory.createGetRequest("toto");
+		assertEquals("Type de commande de la requête", CommandType.GET, req.getCommandType());
+		assertEquals("Clé des données", "toto", req.getKey());
+		assertEquals("Indice des données dans la structure serveur", 0, req.getIndice());
+		assertNull(req.getData());
+		assertNull(req.getDataType());
+		
+	}
+	
+	@Test
+	public void testconstructeur5(){
+		Request req = RequestFactory.createGetRequest("toto",5);
+		assertEquals("Type de commande de la requête", CommandType.GET, req.getCommandType());
+		assertEquals("Clé des données", "toto", req.getKey());
+		assertEquals("Indice des données dans la structure serveur", 5, req.getIndice());
+		assertNull(req.getData());
+		assertNull(req.getDataType());
+		
+	}
+	
 	
 	
 	@Test(expected = ClassNotFoundException.class)
