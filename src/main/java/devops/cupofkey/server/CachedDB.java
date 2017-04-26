@@ -37,7 +37,7 @@ public class CachedDB extends Thread {
 	/**
 	 * Nombre maximum d'element en cache
 	 */
-	private static final int MAX_CACHED_ENTRIES = 500;
+	private static final int MAX_CACHED_ENTRIES = 100;
 	
 	/**
 	 * Dossier contenant les fichiers de la BDD
