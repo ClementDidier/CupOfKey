@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
 import devops.cupofkey.core.ResponseType;
+import devops.cupofkey.core.SerialClass;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.Response;
-import devops.cupofkey.core.SerialClass;
 
 /**
  * 
@@ -23,11 +22,6 @@ public class MasterRequestHandler implements Runnable {
 	 * Socket d'envoi/reception de la reponse/requete
 	 */
 	private final Socket	socket;
-	
-	/**
-	 * Timeout de connexion a un autre serveur
-	 */
-	private final static int CONNEXION_TIMEOUT = 1000;
 	
 	/**
 	 * liste des ports des serveur
@@ -80,7 +74,7 @@ public class MasterRequestHandler implements Runnable {
 				String requestString	= input.readLine();
 				if(requestString != null)
 				{
-					Request requestPackage	= Request.deserialize(requestString, Request.class);
+					Request requestPackage	= SerialClass.deserialize(requestString, Request.class);
 					String response			= generateResponse(requestPackage.getKey(),requestString);
 					output.println(response);
 				}

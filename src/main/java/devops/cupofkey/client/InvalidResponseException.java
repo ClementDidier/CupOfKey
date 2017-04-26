@@ -1,5 +1,8 @@
 package devops.cupofkey.client;
 
+/**
+ * Exception lordsque la Reponse serveur est invalid/erreur serveur
+ */
 public class InvalidResponseException extends Exception{
 	/**
 	 * 
@@ -8,7 +11,6 @@ public class InvalidResponseException extends Exception{
 
 	@Override
 	public String getMessage() {
-		// TODO Auto-generated method stub
 		return "Réponse invalide";
 	}
 }

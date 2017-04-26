@@ -12,6 +12,9 @@ import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
 import devops.cupofkey.core.SerialClass;
 
+/**
+ * Classe offrant des primitives a un system client pour l'utilisation de notre Base de données
+ */
 public class Client implements Closeable
 {
 	/**

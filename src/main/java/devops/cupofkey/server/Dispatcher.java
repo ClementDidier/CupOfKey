@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Dispatcher extends Thread {
 	
+	/**
+	 * Vrai si l'on souhaite afficher des message de debug
+	 */
 	private final static boolean DEBUG = false;
 	/**
 	 * Port d'écoute du serveur

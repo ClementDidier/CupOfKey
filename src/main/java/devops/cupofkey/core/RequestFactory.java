@@ -50,7 +50,6 @@ public class RequestFactory {
 		return new Request(cmdtype, dType, key, 0, data);
 	}
 	/**
-	 * @param cmdtype type de la requete
 	 * @param key cle definie par le client ou sont/seront stocker les donnees
 	 * @param dataInt liste des entier a stocker
 	 * @return une Requete pouvant etre envoyee vers le serveur

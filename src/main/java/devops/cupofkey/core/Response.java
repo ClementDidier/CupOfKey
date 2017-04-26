@@ -28,7 +28,7 @@ public class Response extends SerialClass {
 	 */
 	public Response(ResponseType error){
 		this.responseType	= error;
-		this.data	= new ArrayList<String>();
+		this.data	= new ArrayList<>();
 	}
 	
 	/**

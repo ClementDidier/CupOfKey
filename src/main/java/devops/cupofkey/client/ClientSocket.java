@@ -7,16 +7,38 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * Socket client permettant l'échange de message avec un serveur distant
+ */
 public class ClientSocket extends Socket
 {
+	/**
+	 * Temps avant abandon de la tentative de connexion
+	 */
 	private final static int CONNEXION_TIMEOUT = 3000;
 	
+	/**
+	 * nom de l'host distant
+	 */
 	private String hostname;
+	/**
+	 * port du serveur distant
+	 */
 	private int port;
 	
+	/**
+	 * PrintWriter sur le socket
+	 */
 	private PrintWriter out;
+	/**
+	 * reception des données du socket
+	 */
 	private BufferedReader in;
 	
+	/**
+	 * @param hostname nom de l'host distant
+	 * @param port port du serveur distant
+	 */
 	public ClientSocket(String hostname, int port)
 	{
 		super();
@@ -48,7 +70,7 @@ public class ClientSocket extends Socket
 	 */
 	public void send(String message) throws IOException
 	{	
-		out.println(message);
+		this.out.println(message);
 	}
 	
 	/**
@@ -67,7 +89,7 @@ public class ClientSocket extends Socket
 	 * Ferme la communication et libère des objets utilisés
 	 */
 	@Override
-	public void close() throws IOException
+	public synchronized void close() throws IOException
 	{
 		super.close();
 		

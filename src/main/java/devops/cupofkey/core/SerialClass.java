@@ -59,7 +59,7 @@ public abstract class SerialClass implements Serializable {
 	 * @return une liste de String correspondant à la liste l passee en parametre
 	 */
 	public static List<String> getStringList(List<Integer> l){
-		ArrayList<String> stringList = new ArrayList<String>(l.size());
+		ArrayList<String> stringList = new ArrayList<>(l.size());
 		for (int i : l) {
 			stringList.add(String.valueOf(i)); 
 		}

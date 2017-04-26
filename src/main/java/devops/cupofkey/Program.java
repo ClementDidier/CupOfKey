@@ -12,6 +12,10 @@ import devops.cupofkey.server.master.MasterServer;
  */
 public class Program
 {
+    /**
+     * Lance la console utilisateur
+     * @param args unused
+     */
     public static void main( String[] args )
     {  
         try

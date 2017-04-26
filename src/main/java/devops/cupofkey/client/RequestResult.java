@@ -1,5 +1,8 @@
 package devops.cupofkey.client;
 
+/**
+ * Resultat de la Requete client
+ */
 public enum RequestResult 
 {
 	/**
