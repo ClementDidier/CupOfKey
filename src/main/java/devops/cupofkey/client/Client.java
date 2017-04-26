@@ -3,6 +3,8 @@ package devops.cupofkey.client;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.List;
 
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
@@ -234,6 +236,7 @@ public class Client implements Closeable
 	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
+	 * @param index 
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
@@ -241,9 +244,10 @@ public class Client implements Closeable
 	 * @throws KeyNotFoundException 
 	 * @throws InvalidResponseException 
 	 */
-	public String getString(String key) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException
+
+public String getString(String key, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
 	{
-		Request request = RequestFactory.createRequest(CommandType.GET, DataType.STRING, key, 0, "");
+		Request request = RequestFactory.createRequest(CommandType.GET, DataType.STRING, key, index, "");
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
@@ -268,6 +272,21 @@ public class Client implements Closeable
 	}
 	
 	/**
+	 * Obtient l'élément identifiable par la clé spécifiée
+	 * @param key La clé de l'élément à obtenir
+	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
+	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
+	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
+	 */
+	public String getString(String key) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
+	{
+		return getString(key,0);
+	}
+	
+	/**
 	 * @param key la cle sur laquelle recupere la valeur
 	 * @return l'entier associe a cette cle
 	 * @throws NumberFormatException
@@ -277,7 +296,7 @@ public class Client implements Closeable
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
 	 */
-	public int getInt(String key) throws NumberFormatException, ClassNotFoundException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
+	public int getInt(String key) throws NumberFormatException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
 	{
 		return Integer.valueOf(getString(key));
 	}
@@ -292,9 +311,98 @@ public class Client implements Closeable
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
 	 */
-	public Object getObject(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException
+
+public Object getObject(String key, Class<? extends SerialClass> objectType) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException, ClassNotFoundException
 	{
 		return SerialClass.deserialize(getString(key), objectType);
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere la valeur
+	 * @param index l'index sur lequelle recuperer l'entier
+	 * @return l'entier associe a cette cle
+	 * @throws NumberFormatException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
+	 */
+	public int getInt(String key, int index) throws NumberFormatException, IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException 
+	{
+		return Integer.valueOf(getString(key,index));
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere l'objet
+	 * @param objectType la classe associe a l'objet souhaite
+	 * @param index l'index de l'objet dans la liste
+	 * @return un objet serializabl stocke a cet emplacement
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
+	 */
+	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException, ClassNotFoundException
+	{
+		return SerialClass.deserialize(getString(key,index), objectType);
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere la chaine
+	 * @return la liste de string present a cet cle
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public List<String> getStringList(String key) throws IOException, ClassNotFoundException
+	{
+		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialReception = this.socket.receive();
+		Response response = SerialClass.deserialize(serialReception, Response.class);
+		
+		return response.getData();
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere la liste de int
+	 * @return la liste de int present a cet cle
+	 * @throws NumberFormatException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public List<Integer> getIntList(String key) throws NumberFormatException, ClassNotFoundException, IOException 
+	{
+		List<String> resList = getStringList(key);
+		return SerialClass.getIntegerList(resList);
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere la liste de objets
+	 * @param objectType Classe des objets a deserializer
+	 * @return la liste de objet present a cet cle
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public List<SerialClass> getObjectList(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
+	{
+		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialReception = this.socket.receive();
+		Response response = SerialClass.deserialize(serialReception, Response.class);
+		
+		List<SerialClass> resList = new ArrayList<>();
+		
+		for(String str : response.getData() ){
+			resList.add(SerialClass.deserialize(str, objectType));
+		}
+		
+		return resList;
 	}
 
 	/**
