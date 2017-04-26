@@ -53,12 +53,23 @@ public class RequestFactory {
 	 * @param cmdtype type de la requete
 	 * @param key cle definie par le client ou sont/seront stocker les donnees
 	 * @param dataInt liste des entier a stocker
-	 * @return cle definie par le client ou sont/seront stocker les donnees
+	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	
 	public static Request createIntlistRequest(CommandType cmdtype,String key, List<Integer> dataInt ){
 		ArrayList<String> data = (ArrayList<String>) SerialClass.getStringList(dataInt);
 		return new Request(cmdtype, DataType.INTEGER , key, 0, data);
+	}
+	
+	/**
+	 * 
+	 * @param key le definie par le client ou sont/seront stocker les donnees
+	 * @param dataString iste des chaine de character a stocker
+	 * @return une Requete pouvant etre envoyee vers le serveur
+	 */
+	
+	public static Request createSetStringListRequest(String key , List<String> dataString){
+		return new Request(CommandType.SET, DataType.INTEGER , key, 0, dataString);
 	}
 	
 	/**
