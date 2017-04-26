@@ -241,11 +241,67 @@ public class ClientTest
 				String str = client.getString("MaCleString");
 				assertEquals("La valeur lu est incorrect", "TEST", str);
 			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				fail("Erreur requéte");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			fail("Erreur socket");
+		}
+	}
+	
+	@Test
+	public void ClientGetStringIndex_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleString", "TEST");
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				String str = client.getString("MaCleString",0);
+				assertEquals("La valeur lu est incorrect", "TEST", str);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				fail("Erreur requéte");
+			}
+		} catch (IOException e) {
+			fail("Erreur socket");
+		}
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void ClientGetStringWrongIndex_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleString", "TEST");
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				String str = client.getString("MaCleString",1);
+				assertEquals("La valeur lu est incorrect", "TEST", str);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				fail("Erreur requéte");
+			}
+		} catch (IOException e) {
+			fail("Erreur socket");
+		}
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void ClientGetInt_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleInt", 42);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				int entier = client.getInt("MaCleInt");
+				assertEquals("La valeur lu est incorrect", 42, entier);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				fail("Erreur requéte");
+			}
+		} catch (IOException e) {
+			fail("Erreur socket");
 		}
 	}
 }

@@ -291,6 +291,8 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 			switch(response.getResponseType())
 			{
 				case NO_ERROR:
+					if(response.getData().isEmpty())
+						throw new IndexOutOfBoundsException();
 					return response.getData().get(0);
 				case NO_DATA:
 					throw new KeyNotFoundException();
@@ -328,7 +330,7 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 */
 	public int getInt(String key) throws NumberFormatException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
 	{
-		return Integer.valueOf(getString(key));
+		return Integer.parseInt(getString(key));
 	}
 	
 	/**
@@ -359,7 +361,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 */
 	public int getInt(String key, int index) throws NumberFormatException, IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException 
 	{
-		return Integer.valueOf(getString(key,index));
+		return Integer.parseInt(getString(key,index));
 	}
 	
 	/**
