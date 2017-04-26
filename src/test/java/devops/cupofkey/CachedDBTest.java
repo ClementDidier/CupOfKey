@@ -44,7 +44,7 @@ public class CachedDBTest {
 		DBEntry entry = new IntDBEntry("someKey");
 		DBEntry otherEntry = new IntDBEntry("someOtherKey");
 		
-		List<String>testList = new ArrayList<String>();
+		List<String>testList = new ArrayList<>();
 		testList.add("42");
 		entry.addEntry(testList);
 		testList.add("21");
@@ -76,7 +76,7 @@ public class CachedDBTest {
 		DBEntry entry = new IntDBEntry("someKey");
 		DBEntry otherEntry = new IntDBEntry("someOtherKey");
 		
-		List<String>testList = new ArrayList<String>();
+		List<String>testList = new ArrayList<>();
 		testList.add("42");
 		entry.addEntry(testList);
 		testList.add("21");
@@ -106,7 +106,7 @@ public class CachedDBTest {
 		DBEntry entry = new IntDBEntry("someKey");
 		DBEntry otherEntry = new IntDBEntry("someOtherKey");
 		
-		List<String>testList = new ArrayList<String>();
+		List<String>testList = new ArrayList<>();
 		testList.add("42");
 		entry.addEntry(testList);
 		testList.add("21");
@@ -136,7 +136,7 @@ public class CachedDBTest {
 		CachedDB db = new CachedDB();
 		db.start();
 		
-		List<String>testList = new ArrayList<String>();
+		List<String>testList = new ArrayList<>();
 		testList.add("42");
 		
 		for(int i = 0; i < 1000; i++){
@@ -169,7 +169,7 @@ public class CachedDBTest {
 		
 		long totalCache = endCache - start;
 		
-		assertTrue("Verification que l'acces aux donnees dans le cache est plus rapide : ", totalNoCache > totalCache);
+		assertTrue("Verification que l'acces aux donnees dans le cache est plus rapide : ", totalNoCache >= totalCache);
 		
 		assertTrue(db.get("42").getKey().equals("42"));
 		assertTrue(db.get("42").getType() == DataType.INTEGER);

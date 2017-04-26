@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import devops.cupofkey.core.CommandType;
-import devops.cupofkey.core.ErrorType;
+import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.Response;
 import devops.cupofkey.core.SerialClass;
@@ -104,7 +104,7 @@ public class RequestHandler implements Runnable {
 			case SET:
 				return this.db.set(requestPackage.getKey(), requestPackage.getData(), requestPackage.getDataType());
 			default:
-				return new Response(ErrorType.UNHANDLED_ERROR);
+				return new Response(ResponseType.UNHANDLED_ERROR);
 		}
 	}
 }

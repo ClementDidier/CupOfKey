@@ -38,6 +38,11 @@ public class CachedDB extends Thread {
 	 * Nombre maximum d'element en cache
 	 */
 	private static final int MAX_CACHED_ENTRIES = 500;
+	
+	/**
+	 * Dossier contenant les fichiers de la BDD
+	 */
+	private static final String DATABASE_FOLDER = "database/";
 
 	/**
 	 * Map representant le cache de la Base de donnee.
@@ -108,8 +113,8 @@ public class CachedDB extends Thread {
 	 * @return vrai si une entree de la base de donne associee a cette cle existe sur le disque, faux sinon
 	 */
 	private static boolean containsKeyOnDisk(String key) {
-		File fileInt = new File(INTEGER + key);
-		File fileStr = new File(STRING + key);
+		File fileInt = new File(DATABASE_FOLDER + INTEGER + key);
+		File fileStr = new File(DATABASE_FOLDER + STRING + key);
 		return fileInt.exists() || fileStr.exists();
 	}
 
@@ -181,7 +186,7 @@ public class CachedDB extends Thread {
 		}
 		
 		try {
-			File file = new File(typeCode + entry.getKey());
+			File file = new File(DATABASE_FOLDER + typeCode + entry.getKey());
 			ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(file)) ;
 			oos.writeObject(entry);
 			oos.close();
@@ -202,7 +207,7 @@ public class CachedDB extends Thread {
 		try {
 			File file;
 
-			file = new File(INTEGER + key);
+			file = new File(DATABASE_FOLDER + INTEGER + key);
 			if(file.exists()){
 				ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
 				IntDBEntry entry = (IntDBEntry)ois.readObject() ;
@@ -210,7 +215,7 @@ public class CachedDB extends Thread {
 				return entry;
 			}
 			
-			file = new File(STRING + key);
+			file = new File(DATABASE_FOLDER + STRING + key);
 			if(file.exists()){
 				ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file)) ;
 				StringDBEntry entry = (StringDBEntry)ois.readObject() ;
@@ -232,9 +237,9 @@ public class CachedDB extends Thread {
 	synchronized private void deleteFromDisk(String key){
 		File file;
 		
-		file = new File(INTEGER + key);
+		file = new File(DATABASE_FOLDER + INTEGER + key);
 		file.delete();
-		file = new File(STRING + key);
+		file = new File(DATABASE_FOLDER + STRING + key);
 		file.delete();
 	}
 	

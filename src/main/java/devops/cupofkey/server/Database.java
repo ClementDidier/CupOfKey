@@ -2,7 +2,7 @@ package devops.cupofkey.server;
 
 import java.util.List;
 import devops.cupofkey.core.DataType;
-import devops.cupofkey.core.ErrorType;
+import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.Response;
 
 /**
@@ -36,7 +36,7 @@ public class Database {
 		if(this.masterDB.containsKey(key)){
 			return new Response(this.masterDB.get(key).getEntry());
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class Database {
 		if(this.masterDB.containsKey(key)){
 			return new Response(this.masterDB.get(key).getEntry(indice));
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 	
 	/**
@@ -60,9 +60,9 @@ public class Database {
 	protected Response push(String key, List<String> data, DataType type){
 		if(this.masterDB.containsKey(key)){
 			if(this.masterDB.get(key).addEntry(data)){
-				return new Response(ErrorType.NO_ERROR);
+				return new Response(ResponseType.NO_ERROR);
 			}
-			return new Response(ErrorType.TYPE_ERROR);
+			return new Response(ResponseType.TYPE_ERROR);
 		}
 		
 		DBEntry entry;
@@ -74,7 +74,7 @@ public class Database {
 		}
 		entry.addEntry(data);
 		this.masterDB.put(key, entry);
-		return new Response(ErrorType.NO_ERROR);
+		return new Response(ResponseType.NO_ERROR);
 		
 	}
 	
@@ -90,10 +90,10 @@ public class Database {
 		
 		Response pushResponse = push(key, data, type);
 		
-		if(pushResponse.getError() == ErrorType.NO_ERROR ){
+		if(pushResponse.getResponseType() == ResponseType.NO_ERROR ){
 			return pushResponse;
 		}
-		return new Response(ErrorType.UNHANDLED_ERROR);
+		return new Response(ResponseType.UNHANDLED_ERROR);
 	}
 	
 	/**
@@ -110,9 +110,9 @@ public class Database {
 				this.masterDB.remove(key);
 			}
 			
-			return new Response(ErrorType.NO_ERROR);
+			return new Response(ResponseType.NO_ERROR);
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 	
 	/**
@@ -124,9 +124,9 @@ public class Database {
 		if(this.masterDB.containsKey(key))
 		{
 			this.masterDB.remove(key);
-			return new Response(ErrorType.NO_ERROR);
+			return new Response(ResponseType.NO_ERROR);
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 	
 	/**
@@ -136,9 +136,9 @@ public class Database {
 	 */
 	protected Response isEmpty(String key){
 		if(this.masterDB.containsKey(key)){
-			return new Response(ErrorType.FALSE);
+			return new Response(ResponseType.FALSE);
 		}
-		return new Response(ErrorType.TRUE);
+		return new Response(ResponseType.TRUE);
 	}
 	
 	/**
@@ -149,11 +149,11 @@ public class Database {
 	protected Response increment(String key, int value){
 		if(this.masterDB.containsKey(key)){
 			if(this.masterDB.get(key).increment(value)){
-				return new Response(ErrorType.NO_ERROR);
+				return new Response(ResponseType.NO_ERROR);
 			}
-			return new Response(ErrorType.TYPE_ERROR);
+			return new Response(ResponseType.TYPE_ERROR);
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 	
 	/**
@@ -164,10 +164,10 @@ public class Database {
 	protected Response multiply(String key, int value){
 		if(this.masterDB.containsKey(key)){
 			if(this.masterDB.get(key).multiply(value)){
-				return new Response(ErrorType.NO_ERROR);
+				return new Response(ResponseType.NO_ERROR);
 			}
-			return new Response(ErrorType.TYPE_ERROR);
+			return new Response(ResponseType.TYPE_ERROR);
 		}
-		return new Response(ErrorType.NO_DATA);
+		return new Response(ResponseType.NO_DATA);
 	}
 }

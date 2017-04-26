@@ -6,7 +6,7 @@ import java.net.ConnectException;
 
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
-import devops.cupofkey.core.ErrorType;
+import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.RequestFactory;
 import devops.cupofkey.core.Response;
@@ -88,9 +88,9 @@ public class Client implements Closeable
 		String rcv = this.socket.receive();
 		
 		try { 
-			Response resp = Response.deserialize(rcv,  Response.class);
+			Response resp = SerialClass.deserialize(rcv,  Response.class);
 		
-			switch(resp.getError())
+			switch(resp.getResponseType())
 			{
 				case FALSE:
 					return false;
@@ -115,15 +115,14 @@ public class Client implements Closeable
 	 */
 	public RequestResult store(String key, String str) throws IOException
 	{
-		//Request request = new Request(CommandType.SET, DataType.STRING, key, str);
 		Request request = RequestFactory.createRequest(CommandType.SET, DataType.STRING, key, str);
 		this.socket.send(request.serialize());
 		
 		String recvMsg = this.socket.receive();
 		try 
 		{
-			Response response = Response.deserialize(recvMsg, Response.class);
-			switch(response.getError())
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			switch(response.getResponseType())
 			{
 				case NO_ERROR:
 					return RequestResult.SUCCESS;
@@ -161,9 +160,9 @@ public class Client implements Closeable
 		String recvMsg = this.socket.receive();
 		try 
 		{
-			Response response = Response.deserialize(recvMsg, Response.class);
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
 			System.err.println(response);
-			switch(response.getError())
+			switch(response.getResponseType())
 			{
 				case NO_ERROR:
 					return RequestResult.SUCCESS;
@@ -182,32 +181,16 @@ public class Client implements Closeable
 	/**
 	 * Réalise une demande de stockage d'un objet serialisable après du serveur
 	 * @param key La clé de stockage voulue
-	 * @param val L'objet serialisable à stocker
+	 * @param object L'objet serialisable à stocker
 	 * @return Le status de la requête
 	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée, ou qu'un problème est servenu lors de la communication
 	 */
-	/*
+	
 	public RequestResult store(String key, SerialClass object) throws IOException
 	{
 		String serialObject = object.serialize();
-		
-		Request storeRequest = RequestFactory.createRequest(CommandType.SET, DataType.OBJECT, key, serialObject);
-		
-		this.socket.send(storeRequest.serialize());
-		
-		String recvMsg = this.socket.receive();
-		try 
-		{
-			Response response = Response.deserialize(recvMsg, Response.class);
-			//TODO : Implémenter
-
-			return RequestResult.SUCCESS;
-		} 
-		catch (ClassNotFoundException e) 
-		{
-			return RequestResult.INVALID_RESPONSE;
-		}
-	}*/
+		return store(key, serialObject);
+	}
 	
 	/**
 	 * Supprime l'élément identifié par la clé donnée
@@ -230,9 +213,9 @@ public class Client implements Closeable
 		String serialResponse = this.socket.receive();
 		try 
 		{
-			Response response = Response.deserialize(serialResponse, Response.class);
+			Response response = SerialClass.deserialize(serialResponse, Response.class);
 
-			switch(response.getError())
+			switch(response.getResponseType())
 			{
 				case NO_ERROR:
 					return RequestResult.SUCCESS;
@@ -251,28 +234,51 @@ public class Client implements Closeable
 	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
-	 * @param objectType Le type de l'objet retourné
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
 	 */
-	/*public Object get(String key, Class<? extends SerialClass> objectType) throws IOException, ClassNotFoundException
+	public String getString(String key) throws IOException, ClassNotFoundException
 	{
-		Request request = RequestFactory.;
+		Request request = RequestFactory.createRequest(CommandType.GET, DataType.STRING, key, 0, "");
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
 		String serialReception = this.socket.receive();
-		Response response = Response.deserialize(serialReception, Response.class);
+		Response response = SerialClass.deserialize(serialReception, Response.class);
 		
-		Object obj = SerialClass.deserialize(response.getData().get(0), objectType);
-		return obj;
-	}*/
+		return response.getData().get(0);
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere la valeur
+	 * @return l'entier associe a cette cle
+	 * @throws NumberFormatException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public int getInt(String key) throws NumberFormatException, ClassNotFoundException, IOException 
+	{
+		return Integer.valueOf(getString(key));
+	}
+	
+	/**
+	 * @param key la cle sur laquelle recupere l'objet
+	 * @param objectType la classe associe a l'objet souhaite
+	 * @return un objet serializabl stocke a cet emplacement
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public Object getObject(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
+	{
+		return SerialClass.deserialize(getString(key), objectType);
+	}
 
 	/**
 	 * Ferme la communication avec le serveur et libère les ressources utilisées
 	 * @throws IOException Jetée lorsqu'une erreur survient lors de la fermeture de la communication ou de la libération des ressources utilisées
 	 */
+	@Override
 	public void close() throws IOException 
 	{
 		this.socket.close();

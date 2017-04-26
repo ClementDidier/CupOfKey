@@ -16,7 +16,7 @@ public class Response extends SerialClass {
 	/**
 	 * type d'erreur, peut etre null
 	 */
-	private final ErrorType error;
+	private final ResponseType responseType;
 	
 	/**
 	 * donnees serializees de la reponse
@@ -26,8 +26,8 @@ public class Response extends SerialClass {
 	/**
 	 * @param error nom de l'erreur
 	 */
-	public Response(ErrorType error){
-		this.error	= error;
+	public Response(ResponseType error){
+		this.responseType	= error;
 		this.data	= new ArrayList<String>();
 	}
 	
@@ -35,7 +35,7 @@ public class Response extends SerialClass {
 	 * @param data list des donnees serializees retournee par le serveur
 	 */
 	public Response(List<String> data){
-		this.error	= ErrorType.NO_ERROR;
+		this.responseType	= ResponseType.NO_ERROR;
 		this.data	= data;
 	}
 	
@@ -49,13 +49,12 @@ public class Response extends SerialClass {
 	/**
 	 * @return l'erreur de la reponse
 	 */
-	public ErrorType getError(){
-		return this.error;
+	public ResponseType getResponseType(){
+		return this.responseType;
 	}
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return error.toString();
+		return this.responseType.toString();
 	}
 }

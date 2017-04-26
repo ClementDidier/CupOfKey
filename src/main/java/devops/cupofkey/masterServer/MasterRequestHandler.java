@@ -9,7 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 
-import devops.cupofkey.core.ErrorType;
+import devops.cupofkey.core.ResponseType;
 import devops.cupofkey.core.Request;
 import devops.cupofkey.core.Response;
 import devops.cupofkey.core.SerialClass;
@@ -105,7 +105,7 @@ public class MasterRequestHandler implements Runnable {
 			socket.close();
 			return res;
 		} catch (Exception e) {
-			Response response = new Response(ErrorType.INTERNAL_SERVER_ERROR);
+			Response response = new Response(ResponseType.INTERNAL_SERVER_ERROR);
 			return response.serialize();
 		}
 

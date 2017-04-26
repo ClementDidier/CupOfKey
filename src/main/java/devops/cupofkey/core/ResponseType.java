@@ -4,7 +4,7 @@ package devops.cupofkey.core;
  * Représente l'erreur fourni par le Serveur lors d'une Requete.
  * Permet d'obtenir des informations sur l'etat du serveur et le traitement de la requete
  */
-public enum ErrorType 
+public enum ResponseType 
 {
 	/**
 	 * Pas d'erreur
