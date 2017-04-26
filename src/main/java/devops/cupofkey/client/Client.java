@@ -443,7 +443,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public RequestResult increment(String key, int value) throws ClassNotFoundException, IOException
+	public RequestResult increment(String key, int value) throws IOException
 	{
 		Request request = RequestFactory.createIncrementRequest(key, value);
 		String serialRequest = request.serialize();
@@ -478,7 +478,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public RequestResult multiply(String key, int value) throws ClassNotFoundException, IOException
+	public RequestResult multiply(String key, int value) throws IOException
 	{
 		Request request = RequestFactory.createMultiplyRequest(key, value);
 		String serialRequest = request.serialize();

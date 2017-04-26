@@ -342,6 +342,48 @@ public class ClientTest
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void ClientIncrement_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleInt", 42);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			result = client.increment("MaCleInt",1);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				int val = client.getInt("MaCleInt",0);
+				assertEquals("La valeur lue est incorrect", 43, val);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void ClientMultiply_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleInt", 42);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			result = client.multiply("MaCleInt",2);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				int val = client.getInt("MaCleInt",0);
+				assertEquals("La valeur lue est incorrect", 84, val);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 /**
