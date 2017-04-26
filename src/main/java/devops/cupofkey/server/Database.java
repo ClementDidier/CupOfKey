@@ -1,5 +1,6 @@
 package devops.cupofkey.server;
 
+import java.io.File;
 import java.util.List;
 import devops.cupofkey.core.DataType;
 import devops.cupofkey.core.ResponseType;
@@ -26,6 +27,12 @@ public class Database {
 	protected Database(){
 		this.masterDB = new CachedDB();
 		this.masterDB.start();
+		
+		File dbDir = new File("database");
+		if (!dbDir.exists()) { 
+			dbDir.mkdir(); 
+		}
+
 	}
 	
 	/**

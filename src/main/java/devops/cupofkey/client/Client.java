@@ -83,7 +83,6 @@ public class Client implements Closeable
 	 */
 	public boolean keyExists(String key) throws IOException
 	{
-		// TODO : Revoir Factory
 		Request request = RequestFactory.createRequest(CommandType.EMPTY, null, key);
 		String serial = request.serialize();
 		this.socket.send(serial);
