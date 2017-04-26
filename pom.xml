@@ -74,20 +74,28 @@
 				<version>1.6.0</version>
 				<executions>
 					<execution>
-						<id>server-execution</id>
-						<phase>deploy</phase>
+						<id>server</id>
 						<goals>
 							<goal>java</goal>
 						</goals>
+						<configuration>
+							<mainClass>devops.cupofkey.server.master.MasterServer</mainClass>
+							<arguments>
+								<argument>data/servers.txt</argument>
+								<argument>6666</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>client-shell</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>devops.cupofkey.Program</mainClass>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<mainClass>devops.cupofkey.server.master.MasterServer</mainClass>
-					<arguments>
-						<argument>data/servers.txt</argument>
-						<argument>6666</argument>
-					</arguments>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

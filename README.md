@@ -10,5 +10,10 @@ mvn test
 
 ### Lancement du master server
 ```
-mvn exec:java
+mvn exec:java@server
+```
+
+### Lancement du shell client
+```
+mvn exec:java@client-shell
 ```
