@@ -136,7 +136,7 @@ public class CachedDBTest {
 		CachedDB db = new CachedDB();
 		db.start();
 		
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < CachedDB.MAX_CACHED_ENTRIES * 2; i++){
 			assertTrue(db.put(String.valueOf(i), new IntDBEntry(String.valueOf(i))));
 		}
 		
@@ -148,11 +148,11 @@ public class CachedDBTest {
 			}
 		}
 		
-		assertTrue("Verification de la taille du cache", db.size() == 50);
+		assertTrue("Verification de la taille du cache", db.size() == CachedDB.MAX_CACHED_ENTRIES);
 		
 		long start = System.currentTimeMillis();
 		
-		assertTrue("recuperation d'un element hors cache" , db.get("25") != null);
+		assertTrue("recuperation d'un element hors cache" , db.get("100") != null);
 		
 		long endNoCache = System.currentTimeMillis();
 		
@@ -160,7 +160,7 @@ public class CachedDBTest {
 		
 		start = System.currentTimeMillis();
 		
-		assertTrue("recuperation d'un element du cache" , db.get("75") != null);
+		assertTrue("recuperation d'un element du cache" , db.get("300") != null);
 		
 		long endCache = System.currentTimeMillis();
 		
