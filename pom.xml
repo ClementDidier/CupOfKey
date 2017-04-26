@@ -59,14 +59,7 @@
         <executions>
           <execution>
             <id>server-execution</id>
-            <phase>package</phase>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>client-execution</id>
-            <phase>package</phase>
+            <phase>deploy</phase>
             <goals>
               <goal>java</goal>
             </goals>
