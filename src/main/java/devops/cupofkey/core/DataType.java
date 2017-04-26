@@ -13,9 +13,5 @@ public enum DataType
 	 * Type chaine
 	 */
 	STRING,
-	/**
-	 * type inconnu
-	 */
-	@Deprecated
-	OBJECT
+
 }

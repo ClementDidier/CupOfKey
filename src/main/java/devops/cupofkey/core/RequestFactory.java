@@ -74,7 +74,17 @@ public class RequestFactory {
 		data.add(String.valueOf(dataInt));
 		return new Request(cmdtype, dType, key, 0, data);
 	}
+	/**
+	 * @param cmdtype type de la requete
+	 * @param key cle definie par le client ou sont/seront stocker les donnees
+	 * @param dataInt liste des entier a stocker
+	 * @return cle definie par le client ou sont/seront stocker les donnees
+	 */
 	
+	public static Request createIntlistRequest(CommandType cmdtype,String key, List<Integer> dataInt ){
+		ArrayList<String> data = (ArrayList<String>) Request.getStringList(dataInt);
+		return new Request(cmdtype, DataType.INTEGER , key, 0, data);
+	}
 	
 	/**
 	 * @param cmdtype type de la requete
@@ -95,12 +105,27 @@ public class RequestFactory {
 	}
 	/**
 	 * @param key cle definie par le client sont stocker la liste des donnees a supprimer
-	 * @param indice indice souhaite de la liste ou sont stockee les donnee a l'indice indice
+	 * @param indice indice souhaite de la liste ou sont stockee les donnees a supprimer
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	public static Request createRemoveRequest(String key,int indice){
 		return new Request(CommandType.DELETE,null,key,indice,null);
 	}
-	
-	
+	/**
+	 * 
+	 * @param key cle definie par le client sont stocker la liste des donnees a obtenir
+	 * @return une Requete pouvant etre envoyee vers le serveur
+	 */
+	public static Request createGetRequest(String key){
+		return new Request(CommandType.GET,key);
+	}
+	/**
+	 * 
+	 * @param key cle definie par le client sont stocker la liste des donnees a obtenir
+	 * @param indice indice souhaite de la liste ou est stockee la donnee à obtenir
+	 * @return une Requete pouvant etre envoyee vers le serveur
+	 */
+	public static Request createGetRequest(String key,int indice){
+		return new Request(CommandType.GET,null,key,indice,null);
+	}
 }
