@@ -58,7 +58,7 @@ public class ClientSocket extends Socket
 	 */
 	public String receive() throws IOException
 	{
-		return in.readLine();
+		return this.in.readLine();
 	}
 	
 	/**

@@ -271,10 +271,9 @@ public class Client implements Closeable
 	 * @param index 
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
-	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 * @throws InvalidResponseException Jetée lorsque la tentative de convertion du type de l'objet échoue
 	 * @throws RequestFailedException 
 	 * @throws KeyNotFoundException 
-	 * @throws InvalidResponseException 
 	 */
 
 public String getString(String key, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
@@ -285,6 +284,7 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 		
 		String serialReception = this.socket.receive();
 		Response response;
+		
 		try {
 			response = SerialClass.deserialize(serialReception, Response.class);
 		
@@ -298,7 +298,8 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 				default:
 					throw new RequestFailedException();
 			}
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			throw new InvalidResponseException();
 		}
 	}
@@ -308,8 +309,7 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 * @param key La clé de l'élément à obtenir
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
-	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
-	 * @throws InvalidResponseException 
+	 * @throws InvalidResponseException Jetée lorsque la tentative de convertion du type de l'objet échoue
 	 * @throws RequestFailedException 
 	 * @throws KeyNotFoundException 
 	 */
@@ -322,9 +322,8 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 * @param key la cle sur laquelle recupere la valeur
 	 * @return l'entier associe a cette cle
 	 * @throws NumberFormatException
-	 * @throws ClassNotFoundException
+	 * @throws InvalidResponseException
 	 * @throws IOException
-	 * @throws InvalidResponseException 
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
 	 */
@@ -354,7 +353,6 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @param index l'index sur lequelle recuperer l'entier
 	 * @return l'entier associe a cette cle
 	 * @throws NumberFormatException
-	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 * @throws InvalidResponseException 
 	 * @throws RequestFailedException 
