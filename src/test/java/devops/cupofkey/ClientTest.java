@@ -186,6 +186,172 @@ public class ClientTest
 	}
 	
 	@Test
+	public void ClientGetListString_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTest");
+
+			client.push("pushKeyTest", "chaine1");
+			client.push("pushKeyTest", "chaine2");
+			client.push("pushKeyTest", "chaine3");
+			
+			assertEquals("Verification de la chaine pushee #1", "chaine1", client.getString("pushKeyTest", 0));
+			assertEquals("Verification de la chaine pushee #2", "chaine2", client.getString("pushKeyTest", 1));
+			assertEquals("Verification de la chaine pushee #3", "chaine3", client.getString("pushKeyTest", 2));
+			
+			List<String> resList = client.getStringList("pushKeyTest");
+			
+			assertEquals("Verification de la chaine dans la liste #1", "chaine1", resList.get(0));
+			assertEquals("Verification de la chaine dans la liste #2", "chaine2", resList.get(1));
+			assertEquals("Verification de la chaine dans la liste #3", "chaine3", resList.get(2));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (KeyNotFoundException e) {
+			fail("Erreur de cle non trouve");
+		} catch (RequestFailedException e) {
+			fail("Erreur de traitement de la requete");
+		} catch (InvalidResponseException e) {
+			fail("Erreur de reception");
+		} catch (ClassNotFoundException e) {
+			fail("Erreur de deserialization");
+		}
+	}
+	
+	@Test
+	public void ClientGetListInt_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTest");
+
+			client.push("pushKeyTest", 40);
+			client.push("pushKeyTest", 41);
+			client.push("pushKeyTest", 42);
+			
+			List<Integer> resList = client.getIntList("pushKeyTest");
+			
+			assertTrue("Verification de la chaine dans la liste #1", 40 == resList.get(0));
+			assertTrue("Verification de la chaine dans la liste #2", 41 == resList.get(1));
+			assertTrue("Verification de la chaine dans la liste #3", 42 == resList.get(2));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (ClassNotFoundException e) {
+			fail("Erreur de deserialization");
+		}
+	}
+	
+	@Test
+	public void ClientSetListInt_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("ListKeyTest");
+
+			List<Integer> defList = new ArrayList<>();
+			defList.add(40);
+			defList.add(41);
+			defList.add(42);
+
+			assertEquals("Verification de la reponse serveur lors de l'ajout d'une liste de entier", RequestResult.SUCCESS, client.storeIntList("ListKeyTest", defList));
+			
+			List<Integer> resList = client.getIntList("ListKeyTest");
+			
+			assertTrue("Verification de l'entier dans la liste #1", 40 == resList.get(0));
+			assertTrue("Verification de l'entier dans la liste #2", 41 == resList.get(1));
+			assertTrue("Verification de l'entier dans la liste #3", 42 == resList.get(2));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (ClassNotFoundException e) {
+			fail("Erreur de deserialization");
+		}
+	}
+	
+	@Test
+	public void ClientSetListString_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("ListKeyTest");
+
+			List<String> defList = new ArrayList<>();
+			defList.add("Hubert Bonisseur de La Bath");
+			defList.add("Tu n’es pas seulement un lâche, tu es un traître, comme ta petite taille le laissait deviner. ");
+			defList.add("En tout cas, on peut dire que le soviet éponge... ");
+
+			assertEquals("Verification de la reponse serveur lors de l'ajout d'une liste de chaine", RequestResult.SUCCESS, client.store("ListKeyTest", defList));
+			
+			List<String> resList = client.getStringList("ListKeyTest");
+			
+			assertEquals("Verification de la chaine dans la liste #1", resList.get(0) , "Hubert Bonisseur de La Bath");
+			assertEquals("Verification de la chaine dans la liste #2", resList.get(1) , "Tu n’es pas seulement un lâche, tu es un traître, comme ta petite taille le laissait deviner. ");
+			assertEquals("Verification de la chaine dans la liste #3", resList.get(2) , "En tout cas, on peut dire que le soviet éponge... ");
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (ClassNotFoundException e) {
+			fail("Erreur de deserialization");
+		}
+	}
+	
+	@Test
+	public void ClientGetListObject_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTest");
+
+			client.push("pushKeyTest", new CustomSerialObject(40));
+			client.push("pushKeyTest", new CustomSerialObject(41));
+			client.push("pushKeyTest", new CustomSerialObject(42));
+			
+			List<SerialClass> resList = client.getObjectList("pushKeyTest", CustomSerialObject.class);
+			
+			assertTrue("Verification de l'objet dans la liste #1", 40 == ((CustomSerialObject)resList.get(0)).getAttribute());
+			assertTrue("Verification de l'objet dans la liste #2", 41 == ((CustomSerialObject)resList.get(1)).getAttribute());
+			assertTrue("Verification de l'objet dans la liste #3", 42 == ((CustomSerialObject)resList.get(2)).getAttribute());
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (ClassNotFoundException e) {
+			fail("Erreur de deserialization");
+		}
+	}
+	
+	@Test
 	public void ClientPushDelete_test()
 	{
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {

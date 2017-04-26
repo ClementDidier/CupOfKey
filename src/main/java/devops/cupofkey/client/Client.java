@@ -2,7 +2,8 @@ package devops.cupofkey.client;
 
 import java.io.Closeable;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import devops.cupofkey.core.CommandType;
 import devops.cupofkey.core.DataType;
@@ -115,6 +116,68 @@ public class Client implements Closeable
 	public RequestResult store(String key, String str) throws IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.SET, DataType.STRING, key, str);
+		this.socket.send(request.serialize());
+		
+		String recvMsg = this.socket.receive();
+		try 
+		{
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
+	}
+	
+	/**
+	 * @param key une clé sur laquelle set une liste d'entier
+	 * @param intList une liste d'entier
+	 * @return RequestResult en fonction de la réponse serveur
+	 * @throws IOException
+	 */
+	public RequestResult storeIntList(String key, List<Integer> intList) throws IOException
+	{
+		Request request = RequestFactory.createSetIntListRequest(key, intList);
+		this.socket.send(request.serialize());
+		
+		String recvMsg = this.socket.receive();
+		try 
+		{
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
+	}
+	
+	/**
+	 * @param key une clé sur laquelle set une liste d'entier
+	 * @param strList une liste d'entier
+	 * @return RequestResult en fonction de la réponse serveur
+	 * @throws IOException
+	 */
+	public RequestResult store(String key, List<String> strList) throws IOException
+	{
+		Request request = RequestFactory.createSetStringListRequest(key, strList);
 		this.socket.send(request.serialize());
 		
 		String recvMsg = this.socket.receive();
@@ -453,7 +516,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	/*
+	
 	public List<String> getStringList(String key) throws IOException, ClassNotFoundException
 	{
 		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
@@ -465,7 +528,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 		
 		return response.getData();
 	}
-	*/
+	
 	/**
 	 * @param key la cle sur laquelle recupere la liste de int
 	 * @return la liste de int present a cet cle
@@ -473,13 +536,13 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	/*
+	
 	public List<Integer> getIntList(String key) throws NumberFormatException, ClassNotFoundException, IOException 
 	{
 		List<String> resList = getStringList(key);
 		return SerialClass.getIntegerList(resList);
 	}
-	*/
+	
 	/**
 	 * @param key la cle sur laquelle recupere la liste de objets
 	 * @param objectType Classe des objets a deserializer
@@ -487,7 +550,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	/*
+	
 	public List<SerialClass> getObjectList(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
@@ -505,7 +568,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 		
 		return resList;
 	}
-	*/
+	
 	/**
 	 * @param key cle sur laquelle incrementer
 	 * @param value valeur a ajouter aux donnees
@@ -581,6 +644,16 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	public void close() throws IOException 
 	{
 		this.socket.close();
+	}
+
+	/**
+	 * @param key une clé sur laquelle pusher un objet
+	 * @param serialObject un objet serializable
+	 * @return RequestResult en fonction de la reponse serveur
+	 * @throws IOException
+	 */
+	public RequestResult push(String key, SerialClass serialObject) throws IOException {
+		return push(key, serialObject.serialize());
 	}
 }
 

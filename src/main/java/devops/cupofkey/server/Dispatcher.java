@@ -69,7 +69,11 @@ public class Dispatcher extends Thread {
 			this.executor.shutdownNow();
 			
 			// Attend la terminaison de tous les threads avec un timeout de 5s
-			this.executor.awaitTermination(5, TimeUnit.SECONDS);
+			try {
+				this.executor.awaitTermination(5, TimeUnit.SECONDS);
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
 			
 			// termine le socket server
 			this.socketServeur.close();

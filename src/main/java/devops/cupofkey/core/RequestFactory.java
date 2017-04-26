@@ -56,9 +56,9 @@ public class RequestFactory {
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	
-	public static Request createIntlistRequest(CommandType cmdtype,String key, List<Integer> dataInt ){
+	public static Request createSetIntListRequest(String key, List<Integer> dataInt ){
 		ArrayList<String> data = (ArrayList<String>) SerialClass.getStringList(dataInt);
-		return new Request(cmdtype, DataType.INTEGER , key, 0, data);
+		return new Request(CommandType.SET, DataType.INTEGER , key, 0, data);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class RequestFactory {
 	 */
 	
 	public static Request createSetStringListRequest(String key , List<String> dataString){
-		return new Request(CommandType.SET, DataType.INTEGER , key, 0, dataString);
+		return new Request(CommandType.SET, DataType.STRING , key, 0, dataString);
 	}
 	
 	/**
