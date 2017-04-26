@@ -10,9 +10,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Dispatcher extends Thread {
 	
-	/**
-	 * Vrai si l'on souhaite afficher des message de debug
-	 */
 	private final static boolean DEBUG = false;
 	/**
 	 * Port d'écoute du serveur
@@ -71,12 +68,8 @@ public class Dispatcher extends Thread {
 			// Demande l'arrêt immédiat de chaque thread du Pool
 			this.executor.shutdownNow();
 			
-			// Attend la terminaison de tous les threads avec un timeout de 5s
-			try {
-				this.executor.awaitTermination(5, TimeUnit.SECONDS);
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-			}
+			// Attend la terminaison de tous les threads avec un timeout de 2s
+			this.executor.awaitTermination(2, TimeUnit.SECONDS);
 			
 			// termine le socket server
 			this.socketServeur.close();
