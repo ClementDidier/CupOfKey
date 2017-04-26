@@ -443,16 +443,32 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public ResponseType increment(String key, int value) throws ClassNotFoundException, IOException
+	public RequestResult increment(String key, int value) throws ClassNotFoundException, IOException
 	{
 		Request request = RequestFactory.createIncrementRequest(key, value);
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
 		String serialReception = this.socket.receive();
-		Response response = SerialClass.deserialize(serialReception, Response.class);
+		
+		try 
+		{
+			Response response = SerialClass.deserialize(serialReception, Response.class);
 
-		return response.getResponseType();
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
 	}
 	
 	/**
@@ -462,16 +478,31 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public ResponseType multiply(String key, int value) throws ClassNotFoundException, IOException
+	public RequestResult multiply(String key, int value) throws ClassNotFoundException, IOException
 	{
 		Request request = RequestFactory.createMultiplyRequest(key, value);
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
 		String serialReception = this.socket.receive();
-		Response response = SerialClass.deserialize(serialReception, Response.class);
+		try 
+		{
+			Response response = SerialClass.deserialize(serialReception, Response.class);
 
-		return response.getResponseType();
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
 	}
 
 	/**
