@@ -138,6 +138,68 @@ public class Client implements Closeable
 	}
 	
 	/**
+	 * @param key une cle sur laquelle ajouter un element
+	 * @param str une chaine de caractere a ajouter
+	 * @return RequestResult en fonction du resultat du serveur
+	 * @throws IOException
+	 */
+	public RequestResult push(String key, String str) throws IOException
+	{
+		Request request = RequestFactory.createRequest(CommandType.PUSH, DataType.STRING, key, str);
+		this.socket.send(request.serialize());
+		
+		String recvMsg = this.socket.receive();
+		try 
+		{
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
+	}
+	
+	/**
+	 * @param key une cle sur laquelle ajouter un element
+	 * @param nbr un entier a ajouter
+	 * @return RequestResult en fonction du resultat du serveur
+	 * @throws IOException
+	 */
+	public RequestResult push(String key, int nbr) throws IOException
+	{
+		Request request = RequestFactory.createRequest(CommandType.PUSH, DataType.INTEGER, key, nbr);
+		this.socket.send(request.serialize());
+		
+		String recvMsg = this.socket.receive();
+		try 
+		{
+			Response response = SerialClass.deserialize(recvMsg, Response.class);
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
+	}
+	
+	/**
 	 * Réalise une demande de stockage d'entier après du serveur
 	 * @param key La clé de stockage voulue
 	 * @param val La valeur de l'entier à stocker
@@ -202,7 +264,7 @@ public class Client implements Closeable
 	 * </pre>
 	 * @exception IOException Jetée lorsqu'un problème de communication est survenu
 	 */
-	public RequestResult remove(String key) throws IOException
+	public RequestResult clear(String key) throws IOException
 	{
 		Request request = RequestFactory.createSuppressionRequest(key);
 		String serialRequest = request.serialize();
@@ -212,7 +274,7 @@ public class Client implements Closeable
 		try 
 		{
 			Response response = SerialClass.deserialize(serialResponse, Response.class);
-
+			
 			switch(response.getResponseType())
 			{
 				case NO_ERROR:
@@ -235,10 +297,9 @@ public class Client implements Closeable
 	 * @return RequestResult en fonction de l'etat de la suppression
 	 * @throws IOException
 	 */
-	/*
-	public RequestResult remove(String key, int index) throws IOException
+	public RequestResult delete(String key, int index) throws IOException
 	{
-		Request request = RequestFactory.createRequest(CommandType.DELETE, DataType.STRING, key, index);
+		Request request = RequestFactory.createRemoveRequest(key, index);
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
@@ -262,7 +323,7 @@ public class Client implements Closeable
 			return RequestResult.INVALID_RESPONSE;
 		}
 	}
-	*/
+
 	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
@@ -274,7 +335,7 @@ public class Client implements Closeable
 	 * @throws KeyNotFoundException 
 	 */
 
-public String getString(String key, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
+	public String getString(String key, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
 	{
 		Request request = RequestFactory.createGetRequest(key, index);
 		String serialRequest = request.serialize();

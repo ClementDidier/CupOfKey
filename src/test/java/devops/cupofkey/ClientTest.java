@@ -148,6 +148,119 @@ public class ClientTest
 	}
 	
 	@Test
+	public void ClientPushString_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTest");
+			RequestResult result;
+			
+			result = client.push("pushKeyTest", "chaine1");
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH d'une chaîne de caractères", RequestResult.SUCCESS, result);
+			
+			result = client.push("pushKeyTest", "chaine2");
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH d'une chaîne de caractères", RequestResult.SUCCESS, result);
+
+			result = client.push("pushKeyTest", "chaine3");
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH d'une chaîne de caractères", RequestResult.SUCCESS, result);
+			
+			assertEquals("Verification de la chaine pushee #1", "chaine1", client.getString("pushKeyTest", 0));
+			assertEquals("Verification de la chaine pushee #2", "chaine2", client.getString("pushKeyTest", 1));
+			assertEquals("Verification de la chaine pushee #3", "chaine3", client.getString("pushKeyTest", 2));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (KeyNotFoundException e) {
+			fail("Erreur de cle non trouve");
+		} catch (RequestFailedException e) {
+			fail("Erreur de traitement de la requete");
+		} catch (InvalidResponseException e) {
+			fail("Erreur de reception");
+		}
+	}
+	
+	@Test
+	public void ClientPushDelete_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTest");
+
+			client.push("pushKeyTest", "chaine1");
+			client.push("pushKeyTest", "chaine2");
+			client.push("pushKeyTest", "chaine3");
+			
+			
+			assertEquals("Verification de la chaine pushee #1", "chaine1", client.getString("pushKeyTest", 0));
+			assertEquals("Verification de la chaine pushee #2", "chaine2", client.getString("pushKeyTest", 1));
+			assertEquals("Verification de la chaine pushee #3", "chaine3", client.getString("pushKeyTest", 2));
+			
+			assertEquals("Suppression de la chaine pushee #2",RequestResult.SUCCESS , client.delete("pushKeyTest",1));
+			assertEquals("Verification de la chaine pushee #2->#3", "chaine3", client.getString("pushKeyTest", 1));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (KeyNotFoundException e) {
+			fail("Erreur de cle non trouve");
+		} catch (RequestFailedException e) {
+			fail("Erreur de traitement de la requete");
+		} catch (InvalidResponseException e) {
+			fail("Erreur de reception");
+		}
+	}
+	
+	@Test
+	public void ClientPushInt_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			
+			client.clear("pushKeyTestInt");
+			
+			RequestResult result;
+			
+			result = client.push("pushKeyTestInt", 40);
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH un entier", RequestResult.SUCCESS, result);
+			
+			result = client.push("pushKeyTestInt", 41);
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH d'une chaîne de caractères", RequestResult.SUCCESS, result);
+
+			result = client.push("pushKeyTestInt", 42);
+			assertEquals("Erreur retournée par le serveur lors de la tentative de PUSH d'une chaîne de caractères", RequestResult.SUCCESS, result);
+
+			assertEquals("Verification de l'entier pushee #1", 40, client.getInt("pushKeyTestInt", 0));
+			assertEquals("Verification de l'entier pushee #2", 41, client.getInt("pushKeyTestInt", 1));
+			assertEquals("Verification de l'entier pushee #3", 42, client.getInt("pushKeyTestInt", 2));
+			
+		} catch(SocketException e) {
+			e.printStackTrace();
+			fail("Erreur lors de la communication");
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (KeyNotFoundException e) {
+			fail("Erreur de cle non trouve");
+		} catch (RequestFailedException e) {
+			fail("Erreur de traitement de la requete");
+		} catch (InvalidResponseException e) {
+			fail("Erreur de reception");
+		}
+	}
+	
+	@Test
 	public void ClientStoreInt_test()
 	{
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
@@ -164,7 +277,7 @@ public class ClientTest
 		}
 	}
 	
-	/*@Test
+	@Test
 	public void ClientStoreCustomSerialClassObject_test()
 	{	
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
@@ -173,14 +286,27 @@ public class ClientTest
 			CustomSerialObject obj = new CustomSerialObject(42);
 			RequestResult result = client.store("MaClef", obj);
 			assertEquals("Erreur retournée par le serveur lors de la tentative de STORE d'un objet", RequestResult.SUCCESS, result);
+			
+			CustomSerialObject receivedObject = (CustomSerialObject) client.getObject("MaClef", CustomSerialObject.class);
+			assertEquals("Verification d'un champs de l'objet custom stockee", 42, receivedObject.getAttribute());
+			
 		} catch(SocketException e) {
 			e.printStackTrace();
 			fail("Erreur lors de la communication");
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("Erreur de l'envoi de la requête STORE du client auprès du serveur");
+		} catch (RequestFailedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidResponseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	@Test
 	public void ClientRemoveNotExistingObject_test()
@@ -188,7 +314,7 @@ public class ClientTest
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
-			RequestResult result = client.remove("NotExistingKeyObject");
+			RequestResult result = client.clear("NotExistingKeyObject");
 			assertEquals("Valeur invalide retournée par le serveur lors d'une tentative de suppression d'un objet inextistant", RequestResult.KEY_NOT_FOUND, result);
 		} catch(SocketException e) {
 			e.printStackTrace();
@@ -220,7 +346,7 @@ public class ClientTest
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
-			RequestResult result = client.remove("ExistingKeyObject");
+			RequestResult result = client.clear("ExistingKeyObject");
 			assertEquals("Valeur invalide retournée par le serveur lors d'une tentative de suppression d'un objet inextistant", RequestResult.SUCCESS, result);
 		} catch(SocketException e) {
 			e.printStackTrace();

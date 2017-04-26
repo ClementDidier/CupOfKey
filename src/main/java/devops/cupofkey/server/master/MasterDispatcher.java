@@ -68,11 +68,11 @@ public class MasterDispatcher extends Thread {
 			// Demande l'arrêt immédiat de chaque thread du Pool
 			this.executor.shutdownNow();
 			
-			// Attend la terminaison de tous les threads avec un timeout de 2s
-			this.executor.awaitTermination(2, TimeUnit.SECONDS);
+			// Attend la terminaison de tous les threads avec un timeout de 5s
+			this.executor.awaitTermination(5, TimeUnit.SECONDS);
 			
 			// termine le socket server
-			socketServeur.close();
+			this.socketServeur.close();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

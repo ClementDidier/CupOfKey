@@ -1,11 +1,8 @@
 package devops.cupofkey;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 import devops.cupofkey.client.Client;
-import devops.cupofkey.core.Response;
 import devops.cupofkey.server.Dispatcher;
 import devops.cupofkey.server.master.MasterDispatcher;
 import devops.cupofkey.server.master.MasterServer;
@@ -43,7 +40,7 @@ public class Program
         	
         	build.append("CupofKey client \n");
         	build.append("Commanndes possibles : \n");
-        	build.append("get, set, exist, incr, mult \n"); 
+        	build.append("get, set, exist, incr, mult, clear, delete, push \n"); 
         	
         	System.out.println(build.toString());
         	
@@ -99,30 +96,35 @@ public class Program
         				System.out.println("syntaxe : mult <key> <value>");
         			}
         			break;
-        		/*case "push" :
-        			if (linecut.length==3){
-        				client.multiply(linecut[1],Integer.valueOf(linecut[2]));
+        		case "push" :
+        			if (linecut.length==4){
+        				if(linecut[3].equals("Integer")){
+        					client.push(linecut[1], Integer.valueOf(linecut[2]));
+        				}
+        				else{
+        					client.push(linecut[1], linecut[2]);
+        				}
         			}
         			else{
-        				System.out.println("syntaxe : push <key> <value>");
+        				System.out.println("syntaxe : push <key> <value> <type=Integer||String>");
         			}
         			break;
         		case "delete" :
         			if (linecut.length==3){
-        				client.multiply(linecut[1],Integer.valueOf(linecut[2]));
+        				client.delete(linecut[1],Integer.valueOf(linecut[2]));
         			}
         			else{
-        				System.out.println("syntaxe : mult <key> <value>");
+        				System.out.println("syntaxe : delete <key> <index>");
         			}
         			break;
         		case "clear" :
-        			if (linecut.length==3){
-        				client.multiply(linecut[1],Integer.valueOf(linecut[2]));
+        			if (linecut.length==2){
+        				client.clear(linecut[1]);
         			}
         			else{
-        				System.out.println("syntaxe : mult <key> <value>");
+        				System.out.println("syntaxe : clear <key>");
         			}
-        			break;*/
+        			break;
         		default :
         			build.append("CupofKey client \n");
                 	build.append("Commanndes possibles : \n");
