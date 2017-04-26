@@ -328,7 +328,7 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 */
 	public int getInt(String key) throws NumberFormatException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
 	{
-		return Integer.valueOf(getString(key));
+		return Integer.parseInt(getString(key));
 	}
 	
 	/**
