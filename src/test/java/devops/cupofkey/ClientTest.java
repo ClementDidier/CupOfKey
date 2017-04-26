@@ -239,7 +239,7 @@ public class ClientTest
 			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
 			try {
 				String str = client.getString("MaCleString");
-				assertEquals("La valeur lu est incorrect", "TEST", str);
+				assertEquals("La valeur lue est incorrect", "TEST", str);
 			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
 				fail("Erreur requéte");
 			}
@@ -302,6 +302,25 @@ public class ClientTest
 			}
 		} catch (IOException e) {
 			fail("Erreur socket");
+		}
+	}
+	
+	@Test
+	public void ClientGetInt_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleInt", 42);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				int val = client.getInt("MaCleInt");
+				assertEquals("La valeur lue est incorrect", 42, val);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

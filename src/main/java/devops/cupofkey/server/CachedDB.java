@@ -177,7 +177,7 @@ public class CachedDB extends Thread {
 	/**
 	 * @param entry une nouvelle entree a ecrire sur le systeme de fichier
 	 */
-	@SuppressWarnings({ "static-method", "resource" })
+	@SuppressWarnings({ "static-method" })
 	synchronized private void writeOnDisk(DBEntry entry){
 		
 		char typeCode = INTEGER;
@@ -201,7 +201,7 @@ public class CachedDB extends Thread {
 	 * @param key une cle associe a une entree de la base de donnee
 	 * @return une entree DBEntry si le fichier associe a cette entree a ete trouve, null sinon
 	 */
-	@SuppressWarnings({ "static-method", "resource" })
+	@SuppressWarnings({ "static-method" })
 	synchronized private DBEntry readFromDisk(String key){
 		
 		try {
