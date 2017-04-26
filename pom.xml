@@ -64,17 +64,6 @@
 						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>devops.cupofkey.server.master.MasterServer</mainClass>
-							<arguments>
-								<argument>data/servers.txt</argument>
-								<argument>6666</argument>
-							</arguments>
-						</manifest>
-					</archive>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -89,6 +78,13 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<mainClass>devops.cupofkey.server.master.MasterServer</mainClass>
+					<arguments>
+						<argument>data/servers.txt</argument>
+						<argument>6666</argument>
+					</arguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
