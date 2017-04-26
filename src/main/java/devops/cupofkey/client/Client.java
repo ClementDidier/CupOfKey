@@ -83,7 +83,7 @@ public class Client implements Closeable
 	 */
 	public boolean keyExists(String key) throws IOException
 	{
-		Request request = RequestFactory.createRequest(CommandType.EMPTY, null, key);
+		Request request = RequestFactory.createRequest(CommandType.EMPTY, DataType.STRING, key);
 		String serial = request.serialize();
 		this.socket.send(serial);
 		String rcv = this.socket.receive();
@@ -233,6 +233,39 @@ public class Client implements Closeable
 	}
 	
 	/**
+	 * @param key cle a laquelle supprimer la valeure
+	 * @param index index dans la liste stocke sur laquelle supprimer la valeur
+	 * @return RequestResult en fonction de l'etat de la suppression
+	 * @throws IOException
+	 */
+	public RequestResult remove(String key, int index) throws IOException
+	{
+		Request request = RequestFactory.createRequest(CommandType.DELETE, DataType.STRING, key, index);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialResponse = this.socket.receive();
+		try 
+		{
+			Response response = SerialClass.deserialize(serialResponse, Response.class);
+
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return RequestResult.SUCCESS;
+				case NO_DATA:
+					return RequestResult.KEY_NOT_FOUND;
+				default:
+					return RequestResult.FAILED;
+			}
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			return RequestResult.INVALID_RESPONSE;
+		}
+	}
+	
+	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
 	 * @param index 
@@ -242,7 +275,7 @@ public class Client implements Closeable
 	 */
 	public String getString(String key, int index) throws IOException, ClassNotFoundException
 	{
-		Request request = RequestFactory.createRequest(CommandType.GET, DataType.STRING, key, index, "");
+		Request request = RequestFactory.createGetRequest(key, index);
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
@@ -368,6 +401,44 @@ public class Client implements Closeable
 		}
 		
 		return resList;
+	}
+	
+	/**
+	 * @param key cle sur laquelle incrementer
+	 * @param value valeur a ajouter aux donnees
+	 * @return un type de reponse en fonction du resultat
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public ResponseType increment(String key, int value) throws ClassNotFoundException, IOException
+	{
+		Request request = RequestFactory.createIncrementRequest(key, value);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialReception = this.socket.receive();
+		Response response = SerialClass.deserialize(serialReception, Response.class);
+
+		return response.getResponseType();
+	}
+	
+	/**
+	 * @param key cle sur laquelle multiplier
+	 * @param value valeur a multiplier aux donnees
+	 * @return un type de reponse en fonction du resultat
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public ResponseType multiply(String key, int value) throws ClassNotFoundException, IOException
+	{
+		Request request = RequestFactory.createMultiplyRequest(key, value);
+		String serialRequest = request.serialize();
+		this.socket.send(serialRequest);
+		
+		String serialReception = this.socket.receive();
+		Response response = SerialClass.deserialize(serialReception, Response.class);
+
+		return response.getResponseType();
 	}
 
 	/**

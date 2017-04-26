@@ -13,23 +13,13 @@ public class RequestFactory {
 	 * @param dType type des donnee de la requete
 	 * @param key cle definie par le client ou sont/seront stocker les donnees
 	 * @param indice indice souhaite (optionnel) de la liste ou sont stockee les donnee a l'indice indice
-	 * @param data une liste de String representant des donnees eventuelles
+	 * @param dataString Une String representant des donnees eventuelles
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
-	public static Request createRequest(CommandType cmdtype, DataType dType, String key, int indice, List<String> data){
+	public static Request createRequest(CommandType cmdtype, DataType dType, String key, int indice, String dataString){
+		ArrayList<String> data = new ArrayList<>();
+		data.add(dataString);
 		return new Request(cmdtype, dType, key, indice, data);
-	}
-	
-	
-	/**
-	 * @param cmdtype type de la requete
-	 * @param dType type des donnee de la requete
-	 * @param key cle definie par le client ou sont/seront stocker les donnees
-	 * @param data une liste de String representant des donnees eventuelles
-	 * @return une Requete pouvant etre envoyee vers le serveur
-	 */
-	public static Request createRequest(CommandType cmdtype, DataType dType, String key, List<String> data){
-		return new Request(cmdtype, dType, key, 0, data);
 	}
 	
 	
@@ -41,24 +31,9 @@ public class RequestFactory {
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	public static Request createRequest(CommandType cmdtype, DataType dType, String key, String dataString){
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 		data.add(dataString);
 		return new Request(cmdtype, dType, key, 0, data);
-	}
-	
-	
-	/**
-	 * @param cmdtype type de la requete
-	 * @param dType type des donnee de la requete
-	 * @param key cle definie par le client ou sont/seront stocker les donnees
-	 * @param indice indice souhaite (optionnel) de la liste ou sont stockee les donnee a l'indice indice
-	 * @param dataString Une String representant des donnees eventuelles
-	 * @return une Requete pouvant etre envoyee vers le serveur
-	 */
-	public static Request createRequest(CommandType cmdtype, DataType dType, String key, int indice, String dataString){
-		ArrayList<String> data = new ArrayList<String>();
-		data.add(dataString);
-		return new Request(cmdtype, dType, key, indice, data);
 	}
 	
 	
@@ -70,7 +45,7 @@ public class RequestFactory {
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	public static Request createRequest(CommandType cmdtype, DataType dType, String key, int dataInt){
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 		data.add(String.valueOf(dataInt));
 		return new Request(cmdtype, dType, key, 0, data);
 	}
@@ -82,7 +57,7 @@ public class RequestFactory {
 	 */
 	
 	public static Request createIntlistRequest(CommandType cmdtype,String key, List<Integer> dataInt ){
-		ArrayList<String> data = (ArrayList<String>) Request.getStringList(dataInt);
+		ArrayList<String> data = (ArrayList<String>) SerialClass.getStringList(dataInt);
 		return new Request(cmdtype, DataType.INTEGER , key, 0, data);
 	}
 	
@@ -93,7 +68,7 @@ public class RequestFactory {
 	 * @return une Requete pouvant etre envoyee vers le serveur
 	 */
 	public static Request createRequest(CommandType cmdtype, DataType dType, String key){
-		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<>();
 		return new Request(cmdtype, dType, key, 0, data);
 	}
 	/**
@@ -127,5 +102,23 @@ public class RequestFactory {
 	 */
 	public static Request createGetRequest(String key,int indice){
 		return new Request(CommandType.GET,null,key,indice,null);
+	}
+	
+	/**
+	 * @param key cle sur laquelle incrementer
+	 * @param value valeur à ajouter
+	 * @return une requete pour incrementer des valeurs
+	 */
+	public static Request createIncrementRequest(String key,int value){
+		return new Request(CommandType.INCREMENT,DataType.INTEGER,key,value,new ArrayList<>());
+	}
+	
+	/**
+	 * @param key cle sur laquelle multiplier les valeurs
+	 * @param value valeur à multiplier par
+	 * @return une requete pour multiplier des valeurs
+	 */
+	public static Request createMultiplyRequest(String key,int value){
+		return new Request(CommandType.MULT,DataType.INTEGER,key,value,new ArrayList<>());
 	}
 }
