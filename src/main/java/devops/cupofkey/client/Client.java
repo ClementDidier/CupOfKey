@@ -81,6 +81,7 @@ public class Client implements Closeable
 	 * @return True si la clé existe, False dans tous les autres cas possibles
 	 * @throws IOException Jetée lorsqu'une erreur de communication survient
 	 */
+	/*
 	public boolean keyExists(String key) throws IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.EMPTY, DataType.STRING, key);
@@ -106,6 +107,7 @@ public class Client implements Closeable
 			return false;
 		}
 	}
+	*/
 	
 	/**
 	 * Réalise une demande de stockage de chaîne de caractères auprès du serveur
@@ -185,13 +187,13 @@ public class Client implements Closeable
 	 * @return Le status de la requête
 	 * @throws IOException Jetée lorsque la tentative de serialisation de l'objet a échouée, ou qu'un problème est servenu lors de la communication
 	 */
-	
+	/*
 	public RequestResult store(String key, SerialClass object) throws IOException
 	{
 		String serialObject = object.serialize();
 		return store(key, serialObject);
 	}
-	
+	*/
 	/**
 	 * Supprime l'élément identifié par la clé donnée
 	 * @param key La clé de l'élément à supprimer
@@ -237,6 +239,7 @@ public class Client implements Closeable
 	 * @return RequestResult en fonction de l'etat de la suppression
 	 * @throws IOException
 	 */
+	/*
 	public RequestResult remove(String key, int index) throws IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.DELETE, DataType.STRING, key, index);
@@ -263,7 +266,7 @@ public class Client implements Closeable
 			return RequestResult.INVALID_RESPONSE;
 		}
 	}
-	
+	*/
 	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
@@ -304,7 +307,7 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 			throw new InvalidResponseException();
 		}
 	}
-	
+
 	/**
 	 * Obtient l'élément identifiable par la clé spécifiée
 	 * @param key La clé de l'élément à obtenir
@@ -343,12 +346,12 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
 	 */
-
+/*
 public Object getObject(String key, Class<? extends SerialClass> objectType) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException, ClassNotFoundException
 	{
 		return SerialClass.deserialize(getString(key), objectType);
 	}
-	
+	*/
 	/**
 	 * @param key la cle sur laquelle recupere la valeur
 	 * @param index l'index sur lequelle recuperer l'entier
@@ -375,17 +378,19 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws RequestFailedException 
 	 * @throws KeyNotFoundException 
 	 */
+	/*
 	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException, ClassNotFoundException
 	{
 		return SerialClass.deserialize(getString(key,index), objectType);
 	}
-	
+	*/
 	/**
 	 * @param key la cle sur laquelle recupere la chaine
 	 * @return la liste de string present a cet cle
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
+	/*
 	public List<String> getStringList(String key) throws IOException, ClassNotFoundException
 	{
 		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
@@ -397,7 +402,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 		
 		return response.getData();
 	}
-	
+	*/
 	/**
 	 * @param key la cle sur laquelle recupere la liste de int
 	 * @return la liste de int present a cet cle
@@ -405,12 +410,13 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
+	/*
 	public List<Integer> getIntList(String key) throws NumberFormatException, ClassNotFoundException, IOException 
 	{
 		List<String> resList = getStringList(key);
 		return SerialClass.getIntegerList(resList);
 	}
-	
+	*/
 	/**
 	 * @param key la cle sur laquelle recupere la liste de objets
 	 * @param objectType Classe des objets a deserializer
@@ -418,6 +424,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
+	/*
 	public List<SerialClass> getObjectList(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.GET_LIST, DataType.STRING, key);
@@ -435,7 +442,7 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 		
 		return resList;
 	}
-	
+	*/
 	/**
 	 * @param key cle sur laquelle incrementer
 	 * @param value valeur a ajouter aux donnees
