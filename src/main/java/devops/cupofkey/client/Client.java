@@ -162,7 +162,6 @@ public class Client implements Closeable
 		try 
 		{
 			Response response = SerialClass.deserialize(recvMsg, Response.class);
-			System.err.println(response);
 			switch(response.getResponseType())
 			{
 				case NO_ERROR:

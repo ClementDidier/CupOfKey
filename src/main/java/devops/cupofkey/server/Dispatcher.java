@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Dispatcher extends Thread {
 	
+	private final static boolean DEBUG = false;
 	/**
 	 * Port d'écoute du serveur
 	 */
@@ -48,13 +49,15 @@ public class Dispatcher extends Thread {
 	}
 
 	
-	@SuppressWarnings("resource")
 	@Override
 	public void run(){
 		try
 		{
 			this.socketServeur = new ServerSocket(this.port);
-			System.out.println("Lancement du serveur secondaire sur le port : " + this.port);
+			
+			if (DEBUG)
+				System.out.println("Lancement du serveur secondaire sur le port : " + this.port);
+			
 			while (!isInterrupted()) 
 			{
 				Socket socketClient = this.socketServeur.accept();

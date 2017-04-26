@@ -58,7 +58,9 @@ public class ClientSocket extends Socket
 	 */
 	public String receive() throws IOException
 	{
-		return this.in.readLine();
+		if(this.in != null)
+			return this.in.readLine();
+		throw new IOException("Le support de communication en entrée est null");
 	}
 	
 	/**

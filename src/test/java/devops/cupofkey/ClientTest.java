@@ -19,21 +19,21 @@ import devops.cupofkey.client.KeyNotFoundException;
 import devops.cupofkey.client.RequestFailedException;
 import devops.cupofkey.client.RequestResult;
 import devops.cupofkey.core.SerialClass;
-import devops.cupofkey.masterServer.DistantServer;
-import devops.cupofkey.masterServer.MasterDispatcher;
 import devops.cupofkey.server.Dispatcher;
+import devops.cupofkey.server.master.DistantServer;
+import devops.cupofkey.server.master.MasterDispatcher;
 
 public class ClientTest 
 {
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 	private final static String IP_ADDRESS = "127.0.0.1";
 	private final static long TIMEOUT_SECONDS = 10;
 	
 	private MasterDispatcher server;
+	public List<Dispatcher> disps;
 	
 	@Rule
 	public Timeout globalTimeout = Timeout.seconds(TIMEOUT_SECONDS);
-	public List<Dispatcher> disps;
 	
 	@Before
 	public void load() throws InterruptedException
@@ -51,7 +51,9 @@ public class ClientTest
 				Thread.sleep(100);
 			}
 			DistantServer distServ = new DistantServer(IP_ADDRESS, serv.getPort());
-			System.out.println(distServ.getHostName()+ " : "+ distServ.getPort() );
+			
+			if (DEBUG)
+				System.out.println(distServ.getHostName()+ " : "+ distServ.getPort() );
 			servers.add(distServ);
 		}
 		
@@ -78,7 +80,6 @@ public class ClientTest
 	@Test(expected = IOException.class)
 	public void ClientFailConnect_test() throws IOException
 	{
-		System.err.println("ClientFailConnect_test");
 		try (Client client = new Client("WrongAddress", this.server.getPort()))
 		{
 			// Nothing
@@ -91,7 +92,6 @@ public class ClientTest
 	@Test(expected = IllegalArgumentException.class)
 	public void ClientConnectInvalidPort_test() throws IOException
 	{
-		System.err.println("ClientConnectInvalidPort_test");
 		try (Client client = new Client(IP_ADDRESS, -1))
 		{
 			// Nothing
@@ -104,19 +104,16 @@ public class ClientTest
 	@Test
 	public void ClientConnect_test()
 	{
-		System.err.println("ClientConnect_test");
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("Connection non effective", client.isConnected());
 		} catch (IOException e) {
 			fail("Connection au serveur échouée\n" + e.getMessage());
 		}
-		System.err.println("fin ClientConnect_test");
 	}
 	
 	@Test
 	public void ClientDisconnect_test() throws IOException
 	{
-		System.err.println("ClientDisconnect_test");
 		Client client = null;
 		try {
 			client = new Client(IP_ADDRESS, this.server.getPort());
@@ -134,7 +131,6 @@ public class ClientTest
 	@Test
 	public void ClientStoreString_test()
 	{
-		System.err.println("ClientStoreString_test");
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
@@ -152,7 +148,6 @@ public class ClientTest
 	@Test
 	public void ClientStoreInt_test()
 	{
-		System.err.println("ClientStoreInt_test");
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
@@ -188,7 +183,6 @@ public class ClientTest
 	@Test
 	public void ClientRemoveNotExistingObject_test()
 	{
-		System.err.println("ClientRemoveNotExistingObject_test");
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
@@ -206,7 +200,6 @@ public class ClientTest
 	@Test
 	public void ClientRemoveStoredObject_test()
 	{
-		System.err.println("ClientRemoveStoredObject_test");
 		// Store
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
@@ -237,8 +230,8 @@ public class ClientTest
 	}
 	
 	@Test
-	public void ClientGetString_test(){
-		System.err.println("ClientGetString_test");
+	public void ClientGetString_test()
+	{
 		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
 			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
 			assertFalse("La connexion est fermée", client.isClosed());
@@ -252,7 +245,6 @@ public class ClientTest
 				e.printStackTrace();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
