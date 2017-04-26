@@ -14,7 +14,7 @@ public class MasterDispatcher extends Thread {
 	/**
 	 * Port ecoute par le seveur principale
 	 */
-	private static final int PORT = 8888;
+	private int port = 0;
 	
 	/**
 	 * Executor du pool de Thread gérant les connexion
@@ -25,23 +25,36 @@ public class MasterDispatcher extends Thread {
 	 * Liste des ports des serveurs secondaires
 	 */
 	private final List<DistantServer> servers;
+
+	private ServerSocket socketServeur;
 	
 	/**
 	 * Initialise un pool de Thread poru gérer les requete clients
 	 * @param servers une liste de serveurs secondaires.
 	 */
-	public MasterDispatcher(List<DistantServer> servers) {
+	public MasterDispatcher(List<DistantServer> servers, int port) {
 		super("MasterDispatcher");
 		this.executor 	= (ThreadPoolExecutor) Executors.newCachedThreadPool();
 		this.servers 	= servers;
+		this.port 		= port;
+	}
+	
+	/**
+	 * Renvoie le port du master dispatcher
+	 * @return port
+	 */
+	public int getPort()
+	{
+		if(this.socketServeur != null)
+			return this.socketServeur.getLocalPort();
+		return -1;
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void run(){
 		try {
-			ServerSocket socketServeur = new ServerSocket(PORT);
-			System.out.println("Lancement du serveur maitre sur le port "+ PORT);
+			this.socketServeur = new ServerSocket(port);
+			System.out.println("Lancement du serveur maitre sur le port "+ port);
 			while (!isInterrupted()) {
 				Socket socketClient = socketServeur.accept();
 				MasterRequestHandler t = new MasterRequestHandler(socketClient,this.servers,this.servers.size());

@@ -28,7 +28,7 @@ public class MasterServer {
 			br.close();
 			
 			if(servers.size() > 0){
-				MasterDispatcher dispatcher = new MasterDispatcher(servers);
+				MasterDispatcher dispatcher = new MasterDispatcher(servers,0);
 				dispatcher.start();
 			}
 			else{

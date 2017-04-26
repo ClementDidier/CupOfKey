@@ -52,4 +52,10 @@ public class Response extends SerialClass {
 	public ErrorType getError(){
 		return this.error;
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return error.toString();
+	}
 }

@@ -162,6 +162,7 @@ public class Client implements Closeable
 		try 
 		{
 			Response response = Response.deserialize(recvMsg, Response.class);
+			System.err.println(response);
 			switch(response.getError())
 			{
 				case NO_ERROR:

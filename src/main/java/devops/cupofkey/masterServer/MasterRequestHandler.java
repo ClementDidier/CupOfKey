@@ -75,12 +75,11 @@ public class MasterRequestHandler implements Runnable {
 			BufferedReader input	= new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 			PrintStream output		= new PrintStream(this.socket.getOutputStream());		
 			String requestString	= input.readLine();
-
-			Request requestPackage	= SerialClass.deserialize(requestString, Request.class);
-
-			String response			= generateResponse(requestPackage.getKey(),requestString);
-			
-			output.println(response);
+			if(requestString != null){
+				Request requestPackage	= SerialClass.deserialize(requestString, Request.class);
+				String response			= generateResponse(requestPackage.getKey(),requestString);
+				output.println(response);
+			}
 			
 		} 
 		catch (Exception e) {
@@ -94,13 +93,10 @@ public class MasterRequestHandler implements Runnable {
 	 * @return une reponse recue d'un serveur secondaire a renvoyer a un client (serialisee)
 	 * @throws IOException lors d'une erreur de communication
 	 */
-	@SuppressWarnings("resource")
 	private String generateResponse(String key, String serializedRequest) throws IOException {
+		int idSecondaireServeur = Math.abs(key.hashCode()) % this.nbServeur;
 		try {
-			int idSecondaireServeur = key.hashCode() % this.nbServeur;
-			InetSocketAddress inet = new InetSocketAddress(this.servers.get(idSecondaireServeur).getHostName(),this.servers.get(idSecondaireServeur).getPort());
 			Socket socket = new Socket(this.servers.get(idSecondaireServeur).getHostName(), this.servers.get(idSecondaireServeur).getPort());
-			socket.connect(inet, CONNEXION_TIMEOUT);
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader inputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out.println(serializedRequest);

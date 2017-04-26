@@ -145,7 +145,7 @@ public class CachedDBTest {
 		
 		synchronized (this) {
 			try {
-				this.wait(11000);
+				this.wait(6000);
 			} catch (InterruptedException e) {
 				// void
 			}
