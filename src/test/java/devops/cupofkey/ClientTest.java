@@ -384,6 +384,34 @@ public class ClientTest
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void ClientKeyExists_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCle", 42);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			boolean b = client.keyExists("MaCle");
+			assertTrue("La clé n'a pas été trouvé", b);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void ClientKeyExistsFail_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			boolean b = client.keyExists("CleNul");
+			assertFalse("La clé n'a pas été trouvé", b);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 /**

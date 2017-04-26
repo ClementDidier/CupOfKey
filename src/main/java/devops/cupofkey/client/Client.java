@@ -81,7 +81,7 @@ public class Client implements Closeable
 	 * @return True si la clé existe, False dans tous les autres cas possibles
 	 * @throws IOException Jetée lorsqu'une erreur de communication survient
 	 */
-	/*
+	
 	public boolean keyExists(String key) throws IOException
 	{
 		Request request = RequestFactory.createRequest(CommandType.EMPTY, DataType.STRING, key);
@@ -91,13 +91,13 @@ public class Client implements Closeable
 		
 		try { 
 			Response resp = SerialClass.deserialize(rcv,  Response.class);
-		
+			System.out.println(resp.getResponseType());
 			switch(resp.getResponseType())
 			{
 				case FALSE:
-					return false;
-				case TRUE:
 					return true;
+				case TRUE:
+					return false;
 				default:
 					return false;
 			}
@@ -107,7 +107,7 @@ public class Client implements Closeable
 			return false;
 		}
 	}
-	*/
+	
 	
 	/**
 	 * Réalise une demande de stockage de chaîne de caractères auprès du serveur
