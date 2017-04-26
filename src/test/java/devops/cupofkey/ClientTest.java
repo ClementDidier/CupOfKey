@@ -428,6 +428,66 @@ public class ClientTest
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void ClientGetObject_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			Response r = new Response(ResponseType.TRUE);
+			RequestResult result = client.store("CleObjet", r);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				Object val = client.getObject("CleObjet", Response.class);
+				assertEquals("La valeur lue est incorrect", r.getResponseType(), ((Response) val).getResponseType());
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void ClientGetObjectIndex_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			Response r = new Response(ResponseType.TRUE);
+			RequestResult result = client.store("CleObjet", r);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				Object val = client.getObject("CleObjet", Response.class, 0);
+				assertEquals("La valeur lue est incorrect", r.getResponseType(), ((Response) val).getResponseType());
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void ClientGetObjectWrongIndex_test()
+	{
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			Response r = new Response(ResponseType.TRUE);
+			RequestResult result = client.store("CleObjet", r);
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				Object val = client.getObject("CleObjet", Response.class, 1);
+				assertEquals("La valeur lue est incorrect", r.getResponseType(), ((Response) val).getResponseType());
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 /**

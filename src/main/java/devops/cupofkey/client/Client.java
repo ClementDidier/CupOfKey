@@ -346,12 +346,16 @@ public String getString(String key, int index) throws IOException, KeyNotFoundEx
 	 * @throws KeyNotFoundException 
 	 * @throws RequestFailedException 
 	 */
-/*
-public Object getObject(String key, Class<? extends SerialClass> objectType) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException, ClassNotFoundException
+
+public Object getObject(String key, Class<? extends SerialClass> objectType) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException
 	{
-		return SerialClass.deserialize(getString(key), objectType);
+		try {
+			return SerialClass.deserialize(getString(key), objectType);
+		} catch (ClassNotFoundException e) {
+			throw new InvalidResponseException();
+		}
 	}
-	*/
+	
 	/**
 	 * @param key la cle sur laquelle recupere la valeur
 	 * @param index l'index sur lequelle recuperer l'entier
@@ -378,12 +382,16 @@ public Object getObject(String key, Class<? extends SerialClass> objectType) thr
 	 * @throws RequestFailedException 
 	 * @throws KeyNotFoundException 
 	 */
-	/*
-	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException, ClassNotFoundException
+	
+	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
 	{
-		return SerialClass.deserialize(getString(key,index), objectType);
+		try {
+			return SerialClass.deserialize(getString(key,index), objectType);
+		} catch (ClassNotFoundException e) {
+			throw new InvalidResponseException();
+		}
 	}
-	*/
+	
 	/**
 	 * @param key la cle sur laquelle recupere la chaine
 	 * @return la liste de string present a cet cle
