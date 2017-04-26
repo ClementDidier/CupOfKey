@@ -272,17 +272,35 @@ public class Client implements Closeable
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
+	 * @throws InvalidResponseException 
 	 */
-	public String getString(String key, int index) throws IOException, ClassNotFoundException
+
+public String getString(String key, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
 	{
 		Request request = RequestFactory.createGetRequest(key, index);
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
 		String serialReception = this.socket.receive();
-		Response response = SerialClass.deserialize(serialReception, Response.class);
+		Response response;
+		try {
+			response = SerialClass.deserialize(serialReception, Response.class);
 		
-		return response.getData().get(0);
+		
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return response.getData().get(0);
+				case NO_DATA:
+					throw new KeyNotFoundException();
+				default:
+					throw new RequestFailedException();
+			}
+		} catch (ClassNotFoundException e) {
+			throw new InvalidResponseException();
+		}
 	}
 	
 	/**
@@ -291,8 +309,11 @@ public class Client implements Closeable
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
 	 */
-	public String getString(String key) throws IOException, ClassNotFoundException
+	public String getString(String key) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException
 	{
 		return getString(key,0);
 	}
@@ -303,8 +324,11 @@ public class Client implements Closeable
 	 * @throws NumberFormatException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @throws InvalidResponseException 
+	 * @throws KeyNotFoundException 
+	 * @throws RequestFailedException 
 	 */
-	public int getInt(String key) throws NumberFormatException, ClassNotFoundException, IOException 
+	public int getInt(String key) throws NumberFormatException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
 	{
 		return Integer.valueOf(getString(key));
 	}
@@ -315,8 +339,12 @@ public class Client implements Closeable
 	 * @return un objet serializabl stocke a cet emplacement
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws InvalidResponseException 
+	 * @throws KeyNotFoundException 
+	 * @throws RequestFailedException 
 	 */
-	public SerialClass getObject(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
+
+public Object getObject(String key, Class<? extends SerialClass> objectType) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException, ClassNotFoundException
 	{
 		return SerialClass.deserialize(getString(key), objectType);
 	}
@@ -328,8 +356,11 @@ public class Client implements Closeable
 	 * @throws NumberFormatException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
 	 */
-	public int getInt(String key, int index) throws NumberFormatException, ClassNotFoundException, IOException 
+	public int getInt(String key, int index) throws NumberFormatException, IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException 
 	{
 		return Integer.valueOf(getString(key,index));
 	}
@@ -341,8 +372,11 @@ public class Client implements Closeable
 	 * @return un objet serializabl stocke a cet emplacement
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws InvalidResponseException 
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
 	 */
-	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws ClassNotFoundException, IOException
+	public SerialClass getObject(String key, Class<? extends SerialClass> objectType, int index) throws IOException, KeyNotFoundException, RequestFailedException, InvalidResponseException, ClassNotFoundException
 	{
 		return SerialClass.deserialize(getString(key,index), objectType);
 	}

@@ -14,6 +14,9 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 
 import devops.cupofkey.client.Client;
+import devops.cupofkey.client.InvalidResponseException;
+import devops.cupofkey.client.KeyNotFoundException;
+import devops.cupofkey.client.RequestFailedException;
 import devops.cupofkey.client.RequestResult;
 import devops.cupofkey.core.SerialClass;
 import devops.cupofkey.masterServer.DistantServer;
@@ -230,6 +233,27 @@ public class ClientTest
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("Erreur de l'envoi de la requête auprès du serveur");
+		}
+	}
+	
+	@Test
+	public void ClientGetString_test(){
+		System.err.println("ClientGetString_test");
+		try (Client client = new Client(IP_ADDRESS, this.server.getPort())) {
+			assertTrue("La connexion au serveur n'est pas effective", client.isConnected());
+			assertFalse("La connexion est fermée", client.isClosed());
+			RequestResult result = client.store("MaCleString", "TEST");
+			assertEquals("Erreur lors de l'ajout d'un élément", RequestResult.SUCCESS, result);
+			try {
+				String str = client.getString("MaCleString");
+				assertEquals("La valeur lu est incorrect", "TEST", str);
+			} catch (RequestFailedException | KeyNotFoundException | InvalidResponseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
