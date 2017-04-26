@@ -237,17 +237,34 @@ public class Client implements Closeable
 	 * @return L'élément disponible sur le dépôt distant identifié par la clé spécifiée
 	 * @throws IOException Jetée lorsqu'une erreur de communication est survenue
 	 * @throws ClassNotFoundException Jetée lorsque la tentative de convertion du type de l'objet échoue
+	 * @throws RequestFailedException 
+	 * @throws KeyNotFoundException 
+	 * @throws InvalidResponseException 
 	 */
-	public String getString(String key) throws IOException, ClassNotFoundException
+	public String getString(String key) throws IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException
 	{
 		Request request = RequestFactory.createRequest(CommandType.GET, DataType.STRING, key, 0, "");
 		String serialRequest = request.serialize();
 		this.socket.send(serialRequest);
 		
 		String serialReception = this.socket.receive();
-		Response response = SerialClass.deserialize(serialReception, Response.class);
+		Response response;
+		try {
+			response = SerialClass.deserialize(serialReception, Response.class);
 		
-		return response.getData().get(0);
+		
+			switch(response.getResponseType())
+			{
+				case NO_ERROR:
+					return response.getData().get(0);
+				case NO_DATA:
+					throw new KeyNotFoundException();
+				default:
+					throw new RequestFailedException();
+			}
+		} catch (ClassNotFoundException e) {
+			throw new InvalidResponseException();
+		}
 	}
 	
 	/**
@@ -256,8 +273,11 @@ public class Client implements Closeable
 	 * @throws NumberFormatException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @throws InvalidResponseException 
+	 * @throws KeyNotFoundException 
+	 * @throws RequestFailedException 
 	 */
-	public int getInt(String key) throws NumberFormatException, ClassNotFoundException, IOException 
+	public int getInt(String key) throws NumberFormatException, ClassNotFoundException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException 
 	{
 		return Integer.valueOf(getString(key));
 	}
@@ -268,8 +288,11 @@ public class Client implements Closeable
 	 * @return un objet serializabl stocke a cet emplacement
 	 * @throws IOException
 	 * @throws ClassNotFoundException
+	 * @throws InvalidResponseException 
+	 * @throws KeyNotFoundException 
+	 * @throws RequestFailedException 
 	 */
-	public Object getObject(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException
+	public Object getObject(String key, Class<? extends SerialClass> objectType) throws ClassNotFoundException, IOException, RequestFailedException, KeyNotFoundException, InvalidResponseException
 	{
 		return SerialClass.deserialize(getString(key), objectType);
 	}
